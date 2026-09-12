@@ -6,6 +6,7 @@ const rows = [
   { label: "Le devis", us: "Établi après diagnostic, sur mesure", them: "Forfait standardisé, options en supplément" },
   { label: "Les pièces remplacées", us: "On vous les montre et on vous explique", them: "Remplacées, rarement expliquées" },
   { label: "Les modèles acceptés", us: "Toutes marques, y compris anciens modèles", them: "Marques et modèles récents en priorité" },
+  { label: "Le samedi", us: "Ouvert, de 10h à 19h", them: "Fermé — du lundi au vendredi uniquement" },
   { label: "Acheter, vendre, faire reprendre", us: "Oui — c'est notre seconde activité", them: "Non, uniquement de l'entretien" },
   { label: "Le conseil", us: "On vous dit aussi ce qui peut attendre", them: "L'intérêt est de vendre la prestation" },
 ];
