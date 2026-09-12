@@ -1,0 +1,221 @@
+/**
+ * Recette automatisée de la maquette.
+ *
+ * Lance le site puis : npm run recette
+ * Contrôle : erreurs console, débordement horizontal de 320 à 1920 px,
+ * onglets devis/rendez-vous, validation du formulaire, ancres et liens
+ * d'appel, accessibilité de base, métadonnées et données structurées,
+ * barre d'appel mobile.
+ *
+ * Sort en code 1 à la première anomalie : utilisable en CI.
+ */
+import { chromium } from "playwright";
+
+const URL = process.env.RECETTE_URL ?? "http://127.0.0.1:3000/";
+const browser = await chromium.launch(
+  // En local, Playwright trouve son propre Chromium ; CHROMIUM_PATH sert
+  // aux environnements où le navigateur est déjà installé ailleurs.
+  process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {},
+);
+const L = { locale: "fr-FR", timezoneId: "Europe/Paris" };
+const fails = [], warns = [], oks = [];
+const ok = (m) => oks.push(m);
+const warn = (m) => warns.push(m);
+const fail = (m) => fails.push(m);
+
+// ---------- 1. Erreurs console & réseau ----------
+{
+  const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  const errs = [], bad = [];
+  p.on("console", (m) => { if (m.type() === "error") errs.push(m.text()); });
+  p.on("pageerror", (e) => errs.push("pageerror: " + e.message));
+  p.on("response", (r) => { if (r.status() >= 400) bad.push(`${r.status()} ${r.url()}`); });
+  await p.goto(URL, { waitUntil: "networkidle" });
+  await p.waitForTimeout(900);
+  errs.length ? fail(`Erreurs console : ${errs.join(" | ")}`) : ok("Aucune erreur console");
+  bad.length ? fail(`Requêtes en échec : ${bad.join(" | ")}`) : ok("Aucune requête en échec");
+  await ctx.close();
+}
+
+// ---------- 2. Débordement horizontal ----------
+for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
+  const ctx = await browser.newContext({ ...L, viewport: { width: w, height: 900 } });
+  const p = await ctx.newPage();
+  await p.goto(URL, { waitUntil: "networkidle" });
+  await p.waitForTimeout(400);
+  const over = await p.evaluate(() => {
+    const d = document.documentElement;
+    const diff = d.scrollWidth - d.clientWidth;
+    if (diff <= 1) return null;
+    const guilty = [...document.querySelectorAll("*")]
+      .filter((e) => e.getBoundingClientRect().right > d.clientWidth + 1)
+      .slice(0, 3)
+      .map((e) => e.tagName + "." + String(e.className).slice(0, 40));
+    return { diff, guilty };
+  });
+  over ? fail(`Débordement horizontal à ${w}px (+${over.diff}px) : ${over.guilty.join(", ")}`)
+       : ok(`Pas de débordement à ${w}px`);
+  await ctx.close();
+}
+
+// ---------- 3. Onglets devis / RDV ----------
+{
+  const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  await p.goto(URL, { waitUntil: "networkidle" });
+  const tabs = p.locator('[role="tab"]');
+  (await tabs.count()) === 2 ? ok("Deux onglets présents") : fail("Nombre d'onglets inattendu");
+  await tabs.nth(1).click();
+  await p.waitForTimeout(300);
+  const dateVisible = await p.locator("#date").isVisible().catch(() => false);
+  dateVisible ? ok("Onglet RDV : champs date et créneau affichés") : fail("Onglet RDV : champ date absent");
+  const sel = await tabs.nth(1).getAttribute("aria-selected");
+  sel === "true" ? ok("aria-selected correct sur l'onglet actif") : fail("aria-selected non mis à jour");
+  await tabs.nth(0).click();
+  await p.waitForTimeout(300);
+  const dateGone = !(await p.locator("#date").isVisible().catch(() => false));
+  dateGone ? ok("Retour onglet devis : champ date masqué") : fail("Champ date toujours visible en mode devis");
+  await ctx.close();
+}
+
+// ---------- 4. Validation du formulaire ----------
+{
+  const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  await p.goto(URL, { waitUntil: "networkidle" });
+  await p.locator('button[type="submit"]').click();
+  await p.waitForTimeout(400);
+  const submitted = await p.locator("text=Demande envoyée").isVisible().catch(() => false);
+  submitted ? fail("Le formulaire vide a été accepté") : ok("Formulaire vide bloqué par la validation");
+
+  await p.fill("#marque", "Yamaha");
+  await p.fill("#modele", "XMAX 125");
+  await p.selectOption("#prestation", "freinage");
+  await p.fill("#message", "Bruit au freinage à froid");
+  await p.fill("#nom", "Test Recette");
+  await p.fill("#tel", "0612345678");
+  await p.check('input[type="checkbox"]');
+  await p.locator('button[type="submit"]').click();
+  await p.waitForTimeout(500);
+  const okMsg = await p.locator("text=Demande envoyée").isVisible().catch(() => false);
+  okMsg ? ok("Formulaire complet : écran de confirmation affiché") : fail("Pas de confirmation après envoi valide");
+  const draftNote = await p.locator("text=aucun message n").isVisible().catch(() => false);
+  draftNote ? ok("La confirmation précise qu'aucun message n'est réellement envoyé") : warn("Mention maquette absente");
+  await ctx.close();
+}
+
+// ---------- 5. Ancres de navigation ----------
+{
+  const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  await p.goto(URL, { waitUntil: "networkidle" });
+  const broken = await p.evaluate(() =>
+    [...document.querySelectorAll('a[href^="#"]')]
+      .map((a) => a.getAttribute("href"))
+      .filter((h) => h !== "#" && !document.querySelector(h))
+  );
+  broken.length ? fail(`Ancres cassées : ${[...new Set(broken)].join(", ")}`) : ok("Toutes les ancres pointent vers une section existante");
+
+  const tel = await p.evaluate(() => [...document.querySelectorAll('a[href^="tel:"]')].map((a) => a.getAttribute("href")));
+  tel.every((t) => t === "tel:+33186046505") && tel.length > 0
+    ? ok(`${tel.length} liens d'appel, tous sur le bon numéro`)
+    : fail(`Liens tel incohérents : ${[...new Set(tel)].join(", ")}`);
+  await ctx.close();
+}
+
+// ---------- 6. Accessibilité de base ----------
+{
+  const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  await p.goto(URL, { waitUntil: "networkidle" });
+  const a11y = await p.evaluate(() => {
+    const r = {};
+    r.h1 = document.querySelectorAll("h1").length;
+    r.imgNoAlt = [...document.querySelectorAll("img")].filter((i) => !i.hasAttribute("alt")).length;
+    r.inputsNoLabel = [...document.querySelectorAll("input:not([type=hidden]):not([type=radio]):not([type=checkbox]), select, textarea")]
+      .filter((el) => !el.id || !document.querySelector(`label[for="${el.id}"]`)).length;
+    r.btnNoName = [...document.querySelectorAll("button")]
+      .filter((b) => !b.textContent.trim() && !b.getAttribute("aria-label")).length;
+    r.lang = document.documentElement.lang;
+    return r;
+  });
+  a11y.h1 === 1 ? ok("Un seul h1") : fail(`${a11y.h1} balises h1`);
+  a11y.imgNoAlt === 0 ? ok("Toutes les images ont un alt") : fail(`${a11y.imgNoAlt} images sans alt`);
+  a11y.inputsNoLabel === 0 ? ok("Tous les champs ont un label associé") : fail(`${a11y.inputsNoLabel} champs sans label`);
+  a11y.btnNoName === 0 ? ok("Tous les boutons ont un nom accessible") : fail(`${a11y.btnNoName} boutons sans nom`);
+  a11y.lang === "fr" ? ok('lang="fr" présent') : fail(`lang = "${a11y.lang}"`);
+
+  const focus = await p.evaluate(async () => {
+    const el = document.querySelector('a[href="#devis"]');
+    el.focus();
+    const s = getComputedStyle(el, ":focus-visible");
+    return document.activeElement === el;
+  });
+  focus ? ok("Navigation clavier : les liens prennent le focus") : warn("Focus clavier à vérifier manuellement");
+  await ctx.close();
+}
+
+// ---------- 7. SEO & données structurées ----------
+{
+  const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  await p.goto(URL, { waitUntil: "networkidle" });
+  const seo = await p.evaluate(() => {
+    const ld = document.querySelector('script[type="application/ld+json"]');
+    let parsed = null;
+    try { parsed = JSON.parse(ld.textContent); } catch {}
+    return {
+      title: document.title,
+      desc: document.querySelector('meta[name="description"]')?.content ?? "",
+      robots: document.querySelector('meta[name="robots"]')?.content ?? "",
+      ldType: parsed?.["@type"],
+      ldPhone: parsed?.telephone,
+      ldStreet: parsed?.address?.streetAddress,
+      offers: parsed?.makesOffer?.length ?? 0,
+    };
+  });
+  seo.title.length > 20 && seo.title.length <= 65 ? ok(`Title correct (${seo.title.length} car.)`) : warn(`Title de ${seo.title.length} caractères : "${seo.title}"`);
+  seo.desc.length >= 120 && seo.desc.length <= 165 ? ok(`Meta description correcte (${seo.desc.length} car.)`) : warn(`Meta description de ${seo.desc.length} caractères (cible 120-165)`);
+  seo.robots.includes("noindex") ? ok("noindex actif (maquette)") : fail("La maquette est indexable !");
+  seo.ldType === "AutoRepair" ? ok("Données structurées AutoRepair valides") : fail("Schema.org absent ou incorrect");
+  seo.ldPhone === "01 86 04 65 05" ? ok("Téléphone correct dans les données structurées") : fail(`Téléphone schema : ${seo.ldPhone}`);
+  seo.ldStreet?.includes("Château des Rentiers") ? ok("Adresse correcte dans les données structurées") : fail(`Adresse schema : ${seo.ldStreet}`);
+  seo.offers >= 8 ? ok(`${seo.offers} prestations déclarées en schema.org`) : warn(`${seo.offers} prestations en schema`);
+  await ctx.close();
+}
+
+// ---------- 8. Barre d'appel mobile ----------
+{
+  const ctx = await browser.newContext({ ...L, viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const p = await ctx.newPage();
+  await p.goto(URL, { waitUntil: "networkidle" });
+  const bar = p.locator('a[data-cta="sticky-call"]');
+  (await bar.isVisible()) ? ok("Barre d'appel visible sur mobile") : fail("Barre d'appel absente sur mobile");
+  await p.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await p.waitForTimeout(400);
+  (await bar.isVisible()) ? ok("Barre d'appel toujours visible en bas de page") : fail("Barre d'appel perdue au scroll");
+  const box = await bar.boundingBox();
+  box && box.height >= 44 ? ok(`Cible tactile suffisante (${Math.round(box.height)}px)`) : warn(`Cible tactile de ${box?.height}px (cible ≥ 44px)`);
+  await ctx.close();
+}
+
+// ---------- 9. Desktop : pas de barre d'appel ----------
+{
+  const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  await p.goto(URL, { waitUntil: "networkidle" });
+  const vis = await p.locator('a[data-cta="sticky-call"]').isVisible().catch(() => false);
+  !vis ? ok("Barre d'appel masquée sur ordinateur") : warn("Barre d'appel visible sur ordinateur");
+  await ctx.close();
+}
+
+await browser.close();
+
+console.log("\n================ RECETTE ================\n");
+console.log(`✅ ${oks.length} contrôles passés`);
+oks.forEach((m) => console.log("   ✓ " + m));
+if (warns.length) { console.log(`\n⚠️  ${warns.length} points d'attention`); warns.forEach((m) => console.log("   ! " + m)); }
+if (fails.length) { console.log(`\n❌ ${fails.length} ANOMALIES`); fails.forEach((m) => console.log("   ✗ " + m)); }
+console.log("\n=========================================");
+process.exit(fails.length ? 1 : 0);

@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: `%s | ${site.name}`,
   },
   description:
-    "Atelier indépendant de réparation, entretien et dépannage moto et scooter à Paris 13. Toutes marques, devis gratuit avant intervention. Achat, vente et reprise de deux-roues d'occasion.",
+    "Atelier indépendant moto et scooter à Paris 13 : réparation, entretien, dépannage. Toutes marques, devis gratuit. Achat, vente, reprise. Ouvert le samedi.",
   keywords: [
     "réparation moto Paris 13",
     "garage scooter Paris 13",
