@@ -1,46 +1,29 @@
 {
-  "name": "mcp-blackbox",
+  "name": "as-du-2-roues",
   "version": "0.1.0",
-  "description": "CLI to proxy, verify and summarize MCP server sessions.",
-  "type": "module",
-  "license": "MIT",
-  "bin": {
-    "mcp-blackbox": "./dist/cli.js"
-  },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
-  "engines": {
-    "node": ">=20"
-  },
+  "private": true,
+  "description": "Site vitrine de L'As du 2 Roues — atelier moto et scooter à Paris.",
   "scripts": {
-    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
-    "build": "npm run clean && tsup",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "pretest": "npm run build",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "prepublishOnly": "npm run build"
+    "check": "npm run typecheck && npm run lint && npm run build"
   },
-  "keywords": [
-    "mcp",
-    "cli",
-    "proxy"
-  ],
+  "dependencies": {
+    "next": "16.3.5",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
   "devDependencies": {
-    "@types/node": "^22.10.2",
-    "tsup": "^8.3.5",
-    "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.5",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
