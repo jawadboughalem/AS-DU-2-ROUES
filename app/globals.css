@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design system — L'As du 2 Roues
+   Palette reprise de l'identité existante de l'atelier (carte de visite) :
+   noir profond, rouge pique, blanc cassé. Registre atelier authentique,
+   typographie industrielle. Volontairement sobre en animations : le site doit
+   convertir, pas impressionner.
+   --------------------------------------------------------------------------- */
+@theme {
+  --color-ink: #0a0a0b;
+  --color-ink-2: #131315;
+  --color-ink-3: #1c1c20;
+  --color-bone: #f6f5f2;
+  --color-bone-2: #eae8e3;
+  --color-accent: #e11d26;
+  --color-accent-soft: #f0323b;
+
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background-color: var(--color-accent);
+    color: #fff;
+  }
+  /* Cible de clic confortable sur mobile pour tous les CTA */
+  a,
+  button {
+    touch-action: manipulation;
+  }
+}
+
+@layer utilities {
+  .display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+  }
+  .eyebrow {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.6875rem;
+  }
+  /* Texture discrète pour les fonds sombres — évite l'aplat plat et terne */
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    background-image: radial-gradient(
+      rgba(255, 255, 255, 0.045) 1px,
+      transparent 1px
+    );
+    background-size: 3px 3px;
+  }
+  .rule {
+    border-color: color-mix(in srgb, var(--color-bone) 12%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
