@@ -16,8 +16,12 @@ const inter = Inter({
   display: "swap",
 });
 
-/** À remplacer par le domaine réel une fois acheté par le client. */
-const SITE_URL = "https://www.asdu2roues.fr";
+/**
+ * Sert de base aux URL canoniques et aux métadonnées de partage.
+ * Défini par NEXT_PUBLIC_SITE_URL chez l'hébergeur ; la valeur de repli est
+ * le domaine visé, qui reste à acheter par le client.
+ */
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.asdu2roues.fr";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

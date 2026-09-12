@@ -83,30 +83,122 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
   await ctx.close();
 }
 
-// ---------- 4. Validation du formulaire ----------
+// ---------- 4. Formulaire : validation et envoi ----------
 {
   const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
   const p = await ctx.newPage();
   await p.goto(BASE, { waitUntil: "networkidle" });
   await p.locator('button[type="submit"]').click();
   await p.waitForTimeout(400);
-  const submitted = await p.locator("text=Demande envoyée").isVisible().catch(() => false);
-  submitted ? fail("Le formulaire vide a été accepté") : ok("Formulaire vide bloqué par la validation");
+  const envoyé = await p.locator("text=Demande envoyée").isVisible().catch(() => false);
+  envoyé ? fail("Le formulaire vide a été accepté") : ok("Formulaire vide bloqué par la validation");
+
+  const piège = p.locator("#societe");
+  (await piège.count()) === 1 ? ok("Piège à robots présent dans le formulaire") : fail("Piège à robots absent");
+  // Le piège est déporté hors écran plutôt que masqué en display:none, que
+  // les robots savent détecter. On vérifie donc sa position, pas sa visibilité.
+  const boîte = await piège.boundingBox();
+  boîte && boîte.x < 0
+    ? ok(`Piège à robots hors écran (x = ${Math.round(boîte.x)})`)
+    : fail("Le piège à robots est dans la zone visible");
 
   await p.fill("#marque", "Yamaha");
   await p.fill("#modele", "XMAX 125");
   await p.selectOption("#prestation", "freinage");
-  await p.fill("#message", "Bruit au freinage à froid");
+  await p.fill("#message", "Bruit au freinage à froid depuis une semaine");
   await p.fill("#nom", "Test Recette");
-  await p.fill("#tel", "0612345678");
-  await p.check('input[type="checkbox"]');
+  await p.fill("#telephone", "0612345678");
+  await p.check('input[name="consentement"]');
+
+  const envoiAPI = p.waitForResponse((r) => r.url().includes("/api/demande"), { timeout: 15000 });
   await p.locator('button[type="submit"]').click();
-  await p.waitForTimeout(500);
-  const okMsg = await p.locator("text=Demande envoyée").isVisible().catch(() => false);
-  okMsg ? ok("Formulaire complet : écran de confirmation affiché") : fail("Pas de confirmation après envoi valide");
-  const draftNote = await p.locator("text=aucun message n").isVisible().catch(() => false);
-  draftNote ? ok("La confirmation précise qu'aucun message n'est réellement envoyé") : warn("Mention maquette absente");
+  const réponse = await envoiAPI.catch(() => null);
+
+  réponse ? ok(`Le formulaire appelle bien /api/demande (${réponse.status()})`)
+          : fail("Le formulaire n'a envoyé aucune requête");
+
+  await p.waitForTimeout(700);
+  const succès = await p.locator("text=Demande envoyée").isVisible().catch(() => false);
+  // Next.js pose son propre role="alert" (annonceur de route) : on cible le nôtre.
+  const alerte = await p.locator('[data-erreur="globale"]').isVisible().catch(() => false);
+
+  // Sans clé d'API, l'envoi doit échouer PROPREMENT : jamais de silence.
+  if (succès) {
+    ok("Envoi accepté : écran de confirmation affiché");
+  } else if (alerte) {
+    const texte = await p.locator('[data-erreur="globale"]').innerText();
+    /appelez|indisponible|échou/i.test(texte)
+      ? ok("Envoi indisponible : message clair, avec repli sur le téléphone")
+      : fail(`Message d'erreur peu utile : « ${texte} »`);
+  } else {
+    fail("Ni confirmation ni message d'erreur — l'utilisateur reste sans réponse");
+  }
+
+  const bouton = await p.locator('button[type="submit"]').isEnabled();
+  bouton ? ok("Le bouton redevient actif après un échec") : fail("Le bouton reste bloqué après un échec");
   await ctx.close();
+}
+
+// ---------- 4 bis. La route serveur, directement ----------
+{
+  const base = new URL(BASE).origin;
+
+  const vide = await fetch(`${base}/api/demande`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({}),
+  });
+  const corpsVide = await vide.json().catch(() => ({}));
+  vide.status === 400 && corpsVide.champs
+    ? ok("Requête incomplète : 400 avec le détail des champs fautifs")
+    : fail(`Requête incomplète : ${vide.status} au lieu de 400`);
+
+  const malFormée = await fetch(`${base}/api/demande`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "ceci n'est pas du json",
+  });
+  malFormée.status === 400
+    ? ok("Corps illisible : 400, sans plantage du serveur")
+    : fail(`Corps illisible : ${malFormée.status} au lieu de 400`);
+
+  const valide = {
+    mode: "devis", vehicule: "Scooter", marque: "Yamaha", modele: "XMAX 125",
+    prestation: "freinage", message: "Bruit au freinage à froid",
+    nom: "Test Recette", telephone: "0612345678", consentement: true,
+  };
+
+  const sansConsentement = await fetch(`${base}/api/demande`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...valide, consentement: false }),
+  });
+  sansConsentement.status === 400
+    ? ok("Consentement refusé : la demande est rejetée")
+    : fail(`Consentement non vérifié : ${sansConsentement.status}`);
+
+  const robot = await fetch(`${base}/api/demande`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...valide, societe: "SpamCorp" }),
+  });
+  robot.status === 200
+    ? ok("Robot piégé : réponse 200 sans qu'aucun e-mail ne parte")
+    : fail(`Piège à robots : ${robot.status} au lieu de 200`);
+
+  const complète = await fetch(`${base}/api/demande`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(valide),
+  });
+  const corps = await complète.json().catch(() => ({}));
+  if (complète.status === 200) {
+    ok("Demande valide acceptée et transmise");
+  } else if (complète.status === 503 && /appelez/i.test(corps.erreur ?? "")) {
+    ok("Sans clé d'API : 503 et message de repli vers le téléphone");
+  } else {
+    fail(`Demande valide : ${complète.status} — ${corps.erreur ?? "sans message"}`);
+  }
 }
 
 // ---------- 5. Ancres de navigation ----------

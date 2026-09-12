@@ -18,9 +18,9 @@ Sert aussi de base à l'étude de cas portfolio.
 | Analyse de prix | ✅ Fait — voir `ANALYSE-PRIX.md` |
 | Maquette page d'accueil | ✅ Fait |
 | Identité visuelle | ✅ Reprise du logo existant (noir / rouge / pique) |
-| Recette automatisée | ✅ 47 contrôles verts sur 12 pages |
-| Déploiement | ✅ En ligne — https://jawadboughalem.github.io/AS-DU-2-ROUES/ |
-| Envoi réel du formulaire | ⬜ À faire |
+| Recette automatisée | ✅ 56 contrôles verts, pages et API |
+| Déploiement | ✅ Netlify — https://exquisite-klepon-7b7751.netlify.app/ |
+| Envoi réel du formulaire | 🟡 Codé et testé — attend la clé Resend |
 | Pages par prestation | ✅ 8 pages livrées |
 | Mentions légales / confidentialité | ✅ Livrées, champs légaux à compléter |
 | Espace d'administration | ⬜ À faire |
@@ -94,10 +94,22 @@ Cette cible est **provisoire**. Dès que le formulaire enverra de vrais e-mails
 et que l'espace d'administration existera, le site aura besoin de routes
 serveur et basculera sur Netlify.
 
-### D7 — Deux cibles de build coexistent
-`next.config.ts` produit un rendu Next.js complet par défaut, et un export
-statique sous `STATIC_EXPORT=true`. Cela permet de publier la maquette sans
-compte tiers tout en gardant le chemin vers Netlify ouvert.
+### D7 — GitHub Pages retiré au profit de Netlify
+La double cible de build a rempli son office : publier la maquette sans
+dépendre d'un compte tiers, le temps que Netlify soit en place. Elle est
+retirée, car un export statique ne peut pas héberger la route serveur du
+formulaire — la version Pages aurait affiché un formulaire cassé, ce qui est
+pire que pas de version du tout.
+
+Reste une action à faire une fois : passer *Settings → Pages → Source* sur
+*None*, sans quoi GitHub continue de servir la dernière construction.
+
+### D8 — Le piège à robots est accepté par le schéma, pas rejeté
+La première version refusait le champ piège au niveau de la validation. La
+recette a montré que le robot recevait alors une erreur nommant précisément le
+champ fautif — soit exactement l'information qui lui permet de contourner le
+piège au coup suivant. Le schéma l'accepte désormais, et la route répond 200
+sans rien envoyer.
 
 ---
 
@@ -116,7 +128,7 @@ compte tiers tout en gardant le chemin vers Netlify ouvert.
 
 ## Prochaines étapes techniques
 
-1. Brancher l'envoi réel du formulaire — nécessite la bascule sur Netlify
+1. Créer le compte Resend et saisir RESEND_API_KEY chez Netlify
 2. Espace d'administration : Supabase (base + authentification), liste des
    demandes, confirmation en un clic
 3. Page « L'atelier » (à propos), une fois les photos prises
@@ -144,3 +156,10 @@ compte tiers tout en gardant le chemin vers Netlify ouvert.
 - Champ immatriculation ajouté au formulaire
 - Recette étendue au parcours complet du site : elle a détecté une ancre morte
   vers `#devis` sur les 11 pages internes, corrigée
+- Netlify en ligne, GitHub Pages retiré
+- Envoi réel du formulaire codé : schéma partagé, route serveur, deux e-mails,
+  piège à robots, états de chargement et d'erreur
+- Recette étendue à la route serveur : trois anomalies levées, dont une réelle
+  (le piège à robots renseignait le robot sur le champ à éviter) et deux
+  fausses (Next.js pose son propre role="alert" ; un piège hors écran reste
+  « visible » au sens de Playwright)
