@@ -149,8 +149,21 @@ En contrepartie de ce tarif, je vous demande trois choses :
 À titre de comparaison, les offres d'abonnement type Solocal ou Simplébo
 facturent 50 à 150 € par mois, à vie, et le site ne vous appartient pas.
 
-**Le site vous appartiendra intégralement**, ainsi que le nom de domaine et tous
-les comptes.
+### Propriété et frais récurrents
+
+Le nom de domaine et le compte d'hébergement sont créés **à votre nom, sur vos
+propres comptes**, et vous appartiennent intégralement. Les frais associés — le
+nom de domaine, environ 15 € par an — sont réglés directement par vous auprès
+du registrar. L'hébergement est gratuit.
+
+Je suis administrateur de ces comptes pendant la durée de la mission, **sans
+jamais détenir vos identifiants personnels**. Nous les créerons ensemble lors du
+rendez-vous : vous saisissez vous-même votre mot de passe et votre carte, puis
+vous m'invitez.
+
+À l'issue de la prestation, ou à tout moment sur simple demande, mes accès sont
+retirés sans que le fonctionnement du site en soit affecté. **Vous n'êtes
+jamais dépendant de moi.**
 
 ---
 
@@ -159,8 +172,11 @@ les comptes.
 | Formule | Prix | Contenu |
 |---|---|---|
 | Aucune | 0 € | Intervention à la demande, 60 €/h |
-| **Sérénité** | **39 €/mois** | Hébergement, domaine, sauvegardes, mises à jour, surveillance, 30 min de modifications par mois |
+| **Sérénité** | **39 €/mois** | Gestion technique de l'hébergement et du domaine (surveillance, renouvellement), sauvegardes, mises à jour, 30 min de modifications par mois |
 | Croissance | 79 €/mois | + 1 h de modifications, suivi du référencement, rapport trimestriel |
+
+Les frais de nom de domaine, environ 15 € par an, restent réglés par vos soins
+auprès du registrar : le domaine est à votre nom, et il doit le rester.
 
 Offerte pendant 3 mois avec l'offre 2. Résiliable avec un mois de préavis.
 
