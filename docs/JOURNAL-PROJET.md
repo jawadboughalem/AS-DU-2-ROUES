@@ -19,12 +19,12 @@ Sert aussi de base à l'étude de cas portfolio.
 | Maquette page d'accueil | ✅ Fait |
 | Identité visuelle | ✅ Reprise du logo existant (noir / rouge / pique) |
 | Recette automatisée | ✅ 34 contrôles verts |
-| Déploiement | 🟡 Pipeline en place, Pages à activer une fois |
+| Déploiement | 🟡 Pipeline vert, Pages à activer une fois à la main |
 | Envoi réel du formulaire | ⬜ À faire |
 | Pages par prestation | ⬜ À faire |
 | Mentions légales / confidentialité | ⬜ À faire |
 | Espace d'administration | ⬜ À faire |
-| Proposition et mail client | ✅ Prêts à envoyer |
+| Proposition et mail client | ✅ Prêts — mail aussi livré en Word |
 
 ---
 
@@ -75,6 +75,20 @@ Première tentative via l'artefact Pages officiel : échec, le jeton du workflow
 ne peut pas *créer* le site Pages (`Resource not accessible by integration`).
 Solution retenue : publication sur une branche `gh-pages`, qui ne demande que
 le droit d'écriture sur le contenu.
+
+**Activation de Pages : les trois voies sont verrouillées.**
+
+| Voie | Résultat |
+|---|---|
+| Jeton du workflow (`actions/configure-pages`) | `Resource not accessible by integration` |
+| Jeton de session via l'API REST `/repos/…/pages` | `Access to this GitHub API path is not permitted through this proxy` |
+| Ouvrir `github.io` depuis la session | Egress refusé (403 sur le CONNECT) |
+
+Le pipeline fonctionne — la branche `gh-pages` contient bien le site construit
+(`index.html`, `_next/`, `.nojekyll`). Seule l'activation initiale de Pages
+demande une action manuelle, une seule fois :
+**Settings → Pages → Source : *Deploy from a branch* → `gh-pages` / `/ (root)`.**
+Ensuite chaque push redéploie tout seul.
 
 Cette cible est **provisoire**. Dès que le formulaire enverra de vrais e-mails
 et que l'espace d'administration existera, le site aura besoin de routes
