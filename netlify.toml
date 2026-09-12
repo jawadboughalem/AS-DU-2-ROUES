@@ -4,19 +4,22 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "1"
 
-# Le plugin officiel gère le rendu Next.js (pages statiques, routes serveur,
-# optimisation des images). Netlify l'installe automatiquement, mais on le
-# déclare pour que le comportement soit explicite et reproductible.
+# Le plugin officiel gère le rendu Next.js : pages statiques, routes serveur et
+# optimisation des images. Netlify le détecte seul, mais on le déclare pour que
+# le comportement soit explicite et reproductible.
+#
+# Important : STATIC_EXPORT n'est PAS défini ici. Sur Netlify on veut le rendu
+# Next.js complet, sans quoi le formulaire ne pourrait jamais envoyer d'e-mail
+# ni l'espace d'administration exister.
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Les branches autres que main génèrent une URL de préproduction : c'est ce
-# lien qu'on envoie au client pour validation, jamais le dépôt GitHub.
-[context.deploy-preview]
-  command = "npm run build"
+# Chaque branche autre que main produit automatiquement une URL de
+# préproduction : c'est ce lien qu'on envoie au client pour validation, jamais
+# le dépôt GitHub.
 
-# Un site en maquette ne doit jamais être indexé par erreur.
 [[headers]]
   for = "/*"
   [headers.values]
