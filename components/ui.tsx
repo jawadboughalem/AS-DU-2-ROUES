@@ -16,7 +16,7 @@ type ButtonProps = {
 
 const variants = {
   primary:
-    "bg-accent text-white hover:bg-accent-soft shadow-[0_10px_30px_-12px_rgba(255,90,31,0.8)]",
+    "bg-accent text-white hover:bg-accent-soft shadow-[0_10px_30px_-12px_rgba(225,29,38,0.75)]",
   ghost:
     "border border-bone/25 text-bone hover:border-bone/60 hover:bg-bone/5",
   ghostLight:

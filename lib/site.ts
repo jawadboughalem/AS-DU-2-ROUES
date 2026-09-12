@@ -1,9 +1,9 @@
 /**
  * SOURCE UNIQUE DE VÉRITÉ pour toutes les informations de l'atelier.
  *
- * Tout ce qui est marqué "À CONFIRMER" doit être validé par le client avant
- * la mise en production. Ce fichier sert aussi de check-list des informations
- * à récupérer lors du rendez-vous de cadrage.
+ * Les coordonnées, horaires et prestations proviennent de la carte de visite
+ * de l'atelier. Ce qui reste marqué "À CONFIRMER" doit être validé avant la
+ * mise en production.
  */
 
 export const site = {
@@ -11,37 +11,46 @@ export const site = {
   isDraft: true,
 
   name: "L'As du 2 Roues",
-  tagline: "Atelier moto & scooter à Paris",
+  tagline: "Atelier moto & scooter — Paris 13",
 
-  // --- À CONFIRMER auprès du client -------------------------------------
-  phone: "01 00 00 00 00",
-  phoneHref: "tel:+33100000000",
-  email: "contact@asdu2roues.fr",
+  // --- Confirmé par la carte de visite ----------------------------------
+  phone: "01 86 04 65 05",
+  phoneHref: "tel:+33186046505",
+  email: "lasdudeuxroues@gmail.com",
   address: {
-    street: "00 rue à confirmer",
-    zip: "750XX",
+    street: "212 rue du Château des Rentiers",
+    zip: "75013",
     city: "Paris",
+    district: "Paris 13e",
     country: "FR",
   },
-  /** Lien "Itinéraire" Google Maps — à remplacer par celui de la fiche réelle. */
-  mapsUrl: "https://www.google.com/maps/search/?api=1&query=L%27As+du+2+Roues+Paris",
-  googleReviewsUrl: "https://www.google.com/maps/search/?api=1&query=L%27As+du+2+Roues+Paris",
-  rating: { score: 4.9, count: 127 },
+  mapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=212+rue+du+Ch%C3%A2teau+des+Rentiers+75013+Paris",
   // ----------------------------------------------------------------------
 
+  // --- À CONFIRMER avec le client ---------------------------------------
+  /** Note et nombre d'avis à relever sur la fiche Google Business. */
+  rating: { score: 4.9, count: 127 },
+  googleReviewsUrl:
+    "https://www.google.com/maps/search/?api=1&query=L%27As+du+2+Roues+212+rue+du+Ch%C3%A2teau+des+Rentiers+Paris",
+  /** Métro / accès : à confirmer (Olympiades ? Porte d'Ivry ?). */
+  access: "Métro Olympiades / Porte d'Ivry",
+  // ----------------------------------------------------------------------
+
+  /** Mardi au samedi, 10h – 19h (carte de visite). */
   hours: [
-    { day: "Lundi", value: "9h00 – 19h00" },
-    { day: "Mardi", value: "9h00 – 19h00" },
-    { day: "Mercredi", value: "9h00 – 19h00" },
-    { day: "Jeudi", value: "9h00 – 19h00" },
-    { day: "Vendredi", value: "9h00 – 19h00" },
-    { day: "Samedi", value: "9h00 – 17h00" },
+    { day: "Lundi", value: "Fermé", closed: true },
+    { day: "Mardi", value: "10h00 – 19h00" },
+    { day: "Mercredi", value: "10h00 – 19h00" },
+    { day: "Jeudi", value: "10h00 – 19h00" },
+    { day: "Vendredi", value: "10h00 – 19h00" },
+    { day: "Samedi", value: "10h00 – 19h00" },
     { day: "Dimanche", value: "Fermé", closed: true },
   ],
 
   brands: [
     "Yamaha", "Honda", "Piaggio", "Peugeot", "Kymco",
-    "SYM", "BMW", "Suzuki", "Kawasaki", "Vespa",
+    "SYM", "Suzuki", "Kawasaki", "Vespa", "BMW",
   ],
 } as const;
 
@@ -53,13 +62,35 @@ export type Service = {
   icon: string;
 };
 
+/** Prestations mécaniques. Achat / vente / reprise est traité à part. */
 export const services: readonly Service[] = [
   {
-    slug: "revision-entretien",
-    title: "Révision & entretien",
+    slug: "entretien-revision",
+    title: "Entretien & révision",
     short: "Vidange, filtres, bougies, contrôle complet selon les préconisations constructeur.",
     bullets: ["Vidange moteur", "Filtres à air et à huile", "Bougies", "Contrôle 20 points"],
     icon: "oil",
+  },
+  {
+    slug: "reparation",
+    title: "Réparation mécanique",
+    short: "Du petit dépannage à la remise en état moteur, sur devis validé avant intervention.",
+    bullets: ["Moteur & cylindre", "Carburation & injection", "Suspension", "Carrosserie"],
+    icon: "wrench",
+  },
+  {
+    slug: "diagnostic",
+    title: "Diagnostic",
+    short: "Recherche de panne à la valise et à l'oreille, avant tout devis.",
+    bullets: ["Lecture des codes défaut", "Test de compression", "Contrôle injection", "Rapport expliqué"],
+    icon: "diag",
+  },
+  {
+    slug: "depannage",
+    title: "Dépannage",
+    short: "Immobilisé dans Paris ? On intervient ou on récupère le véhicule.",
+    bullets: ["Intervention sur place", "Enlèvement du véhicule", "Panne de démarrage", "Crevaison"],
+    icon: "tow",
   },
   {
     slug: "pneumatiques",
@@ -76,11 +107,11 @@ export const services: readonly Service[] = [
     icon: "brake",
   },
   {
-    slug: "diagnostic",
-    title: "Diagnostic",
-    short: "Recherche de panne à la valise et à l'oreille, avant tout devis.",
-    bullets: ["Lecture des codes défaut", "Test de compression", "Contrôle injection", "Rapport expliqué"],
-    icon: "diag",
+    slug: "transmission",
+    title: "Transmission",
+    short: "Kit chaîne, courroie, galets, variateur, embrayage.",
+    bullets: ["Kit chaîne complet", "Courroie & galets", "Variateur", "Embrayage"],
+    icon: "chain",
   },
   {
     slug: "electricite",
@@ -89,35 +120,28 @@ export const services: readonly Service[] = [
     bullets: ["Batterie & charge", "Démarreur", "Faisceau électrique", "Éclairage & clignotants"],
     icon: "bolt",
   },
-  {
-    slug: "transmission",
-    title: "Transmission",
-    short: "Kit chaîne, courroie, galets, variateur, embrayage.",
-    bullets: ["Kit chaîne complet", "Courroie & galets", "Variateur", "Embrayage"],
-    icon: "chain",
-  },
 ];
 
 export const process = [
   {
     step: "01",
-    title: "Vous nous décrivez le problème",
-    body: "Par téléphone ou via le formulaire de devis. Marque, modèle, kilométrage, symptômes : plus c'est précis, plus notre réponse l'est.",
+    title: "Vous décrivez votre besoin",
+    body: "Par téléphone, en demande de devis ou en demande de rendez-vous. Marque, modèle, kilométrage, symptômes : plus c'est précis, plus notre réponse l'est.",
   },
   {
     step: "02",
+    title: "On vous confirme un créneau",
+    body: "Nous vous rappelons sous 24 h ouvrées pour caler un rendez-vous réaliste, en fonction de l'intervention et des pièces à prévoir.",
+  },
+  {
+    step: "03",
     title: "Diagnostic et devis clair",
     body: "Nous examinons le véhicule et vous annonçons un prix avant toute intervention. Pas de travaux engagés sans votre accord.",
   },
   {
-    step: "03",
-    title: "Intervention à l'atelier",
-    body: "Pièces d'origine ou équivalentes, traçabilité conservée. On vous montre les pièces remplacées.",
-  },
-  {
     step: "04",
     title: "Restitution et explications",
-    body: "On vous explique ce qui a été fait, ce qui est à surveiller, et quand revenir. Facture détaillée.",
+    body: "On vous montre les pièces remplacées, on vous explique ce qui est à surveiller, et quand revenir. Facture détaillée.",
   },
 ];
 
@@ -145,7 +169,7 @@ export const reviews = [
   },
   {
     name: "Karim T.",
-    body: "Ils ont accepté ma vieille 125 que personne ne voulait toucher. Travail soigné, je ne vais plus ailleurs.",
+    body: "Ils ont repris mon ancienne 125 et m'ont trouvé un modèle révisé dans mon budget. Deux affaires en une visite.",
     context: "Honda CB 125",
   },
 ];
@@ -153,7 +177,11 @@ export const reviews = [
 export const faq = [
   {
     q: "Faut-il prendre rendez-vous ?",
-    a: "C'est préférable. Un appel ou une demande de devis en ligne nous permet de préparer les pièces et de vous donner un créneau réaliste. Pour une urgence, appelez-nous directement.",
+    a: "C'est préférable. Une demande de rendez-vous en ligne ou un appel nous permet de préparer les pièces et de vous donner un créneau réaliste. Pour une urgence, appelez-nous directement.",
+  },
+  {
+    q: "Mon créneau est-il confirmé immédiatement ?",
+    a: "Non, et c'est volontaire. Vous nous indiquez vos disponibilités, nous vous confirmons le créneau sous 24 h ouvrées après avoir vérifié la charge de l'atelier et les pièces nécessaires. Nous préférons un rendez-vous tenu à un rendez-vous annulé.",
   },
   {
     q: "Travaillez-vous toutes les marques ?",
@@ -164,15 +192,38 @@ export const faq = [
     a: "Le devis est gratuit. Seul un diagnostic électronique approfondi peut être facturé, et il est toujours annoncé à l'avance.",
   },
   {
-    q: "Utilisez-vous des pièces d'origine ?",
-    a: "Nous utilisons des pièces d'origine ou de qualité équivalente. Vous choisissez : nous vous présentons les options et les écarts de prix.",
+    q: "Reprenez-vous mon ancien deux-roues ?",
+    a: "Oui. Nous rachetons et reprenons motos et scooters, roulants ou non. Envoyez-nous quelques photos et les informations du véhicule pour recevoir une estimation.",
   },
   {
-    q: "Combien de temps dure une intervention ?",
-    a: "Un entretien courant se fait dans la journée. Pour une réparation nécessitant une commande de pièce, nous vous annonçons un délai au moment du devis.",
-  },
-  {
-    q: "Puis-je laisser mon véhicule et le récupérer plus tard ?",
-    a: "Oui, dans la limite de la place disponible à l'atelier. Prévenez-nous au moment de la prise de rendez-vous.",
+    q: "Intervenez-vous en dépannage ?",
+    a: "Oui, dans Paris et la proche banlieue. Appelez-nous : selon la panne, nous intervenons sur place ou nous récupérons le véhicule pour le ramener à l'atelier.",
   },
 ];
+
+/**
+ * Ligne d'activité distincte de la mécanique : achat, vente et reprise de
+ * véhicules d'occasion. C'est ce que le réseau concurrent ne propose pas.
+ */
+export const trading = {
+  title: "Achat · Vente · Reprise",
+  lead:
+    "Nous ne faisons pas que réparer : nous achetons, reprenons et revendons motos et scooters d'occasion, révisés par nos soins.",
+  cards: [
+    {
+      title: "Vous vendez",
+      body: "Rachat de votre moto ou scooter, roulant ou non. Estimation gratuite, paiement immédiat, démarches administratives prises en charge.",
+      cta: "Faire estimer mon véhicule",
+    },
+    {
+      title: "Vous reprenez",
+      body: "Votre ancien deux-roues est déduit du prix de votre prochain véhicule. Une seule visite, une seule démarche.",
+      cta: "Demander une reprise",
+    },
+    {
+      title: "Vous achetez",
+      body: "Occasions révisées dans notre atelier, avec l'historique d'entretien. Vous savez exactement ce que vous achetez.",
+      cta: "Voir les véhicules disponibles",
+    },
+  ],
+} as const;

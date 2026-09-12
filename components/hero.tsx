@@ -10,32 +10,33 @@ export function Hero() {
       <div
         aria-hidden
         className="pointer-events-none absolute -top-40 left-1/2 h-[38rem] w-[38rem] -translate-x-1/2 rounded-full opacity-25 blur-[120px]"
-        style={{ background: "radial-gradient(circle, #ff5a1f 0%, transparent 65%)" }}
+        style={{ background: "radial-gradient(circle, #e11d26 0%, transparent 65%)" }}
       />
       <Header />
 
       <div className="relative mx-auto grid max-w-6xl gap-12 px-5 pt-32 pb-20 sm:px-8 md:pt-40 md:pb-28 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16">
         <div>
           <p className="eyebrow mb-5 inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3.5 py-1.5 text-accent">
-            Atelier indépendant · {site.address.city}
+            Atelier indépendant · {site.address.district}
           </p>
 
           <h1 className="display text-[2.6rem] leading-[0.95] sm:text-6xl lg:text-[4.25rem]">
             Réparation moto
             <br />
-            &amp; scooter à Paris.
+            &amp; scooter à Paris{" "}13.
             <br />
             <span className="text-accent">Sans mauvaise surprise.</span>
           </h1>
 
           <p className="mt-7 max-w-xl text-base leading-relaxed text-bone/70 sm:text-lg">
-            Toutes marques, du 50 cm³ au gros cube. On diagnostique, on vous
-            explique, on vous annonce le prix — <strong className="font-semibold text-bone">et seulement
+            Entretien, réparation, dépannage — et achat, vente, reprise. Toutes
+            marques, du 50 cm³ au gros cube. On diagnostique, on vous explique,
+            on vous annonce le prix — <strong className="font-semibold text-bone">et seulement
             ensuite</strong> on intervient.
           </p>
 
           <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2.5">
-            {["Devis gratuit", "Toutes marques", "Pièces montrées et expliquées"].map((item) => (
+            {["Devis gratuit", "Toutes marques", "Achat · Vente · Reprise"].map((item) => (
               <li key={item} className="flex items-center gap-2 text-sm text-bone/75">
                 <Check className="h-4 w-4 shrink-0 text-accent" />
                 {item}
@@ -47,7 +48,7 @@ export function Hero() {
             <a
               href={site.phoneHref}
               data-cta="hero-call"
-              className="inline-flex items-center justify-center gap-2.5 rounded-full bg-accent px-7 py-4 text-[0.95rem] font-semibold text-white shadow-[0_14px_40px_-14px_rgba(255,90,31,0.9)] transition-colors hover:bg-accent-soft"
+              className="inline-flex items-center justify-center gap-2.5 rounded-full bg-accent px-7 py-4 text-[0.95rem] font-semibold text-white shadow-[0_14px_40px_-14px_rgba(225,29,38,0.85)] transition-colors hover:bg-accent-soft"
             >
               <Phone className="h-4.5 w-4.5" />
               {site.phone}

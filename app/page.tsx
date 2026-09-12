@@ -1,6 +1,7 @@
 import { DraftBanner } from "@/components/draft-banner";
 import { Hero } from "@/components/hero";
 import { Services } from "@/components/services";
+import { Trading } from "@/components/trading";
 import { ProcessSteps } from "@/components/process-steps";
 import { WhyUs } from "@/components/why-us";
 import { Reviews } from "@/components/reviews";
@@ -18,6 +19,7 @@ export default function Home() {
       <main>
         <Hero />
         <Services />
+        <Trading />
         <ProcessSteps />
         <WhyUs />
         <Reviews />

@@ -3,7 +3,7 @@ import { Eyebrow, PhotoSlot, Section, Title } from "./ui";
 
 export function ProcessSteps() {
   return (
-    <Section id="deroulement" tone="darker">
+    <Section id="deroulement" tone="dark">
       <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <div>
           <Eyebrow>Comment ça se passe</Eyebrow>

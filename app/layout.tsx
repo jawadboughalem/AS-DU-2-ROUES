@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, Inter } from "next/font/google";
-import { site } from "@/lib/site";
+import { services, site } from "@/lib/site";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -22,26 +22,29 @@ const SITE_URL = "https://www.asdu2roues.fr";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${site.name} — Réparation moto & scooter à ${site.address.city}`,
+    default: `${site.name} — Réparation moto & scooter à ${site.address.district}`,
     template: `%s | ${site.name}`,
   },
   description:
-    "Atelier indépendant de réparation et d'entretien moto et scooter à Paris. Toutes marques, diagnostic honnête, devis gratuit avant toute intervention.",
+    "Atelier indépendant de réparation, entretien et dépannage moto et scooter à Paris 13. Toutes marques, devis gratuit avant intervention. Achat, vente et reprise de deux-roues d'occasion.",
   keywords: [
-    "réparation moto Paris",
-    "garage scooter Paris",
+    "réparation moto Paris 13",
+    "garage scooter Paris 13",
     "entretien moto Paris",
     "révision scooter Paris",
     "mécanicien deux roues Paris",
+    "dépannage scooter Paris",
+    "rachat moto Paris",
+    "reprise scooter Paris",
   ],
   openGraph: {
     type: "website",
     locale: "fr_FR",
     url: SITE_URL,
     siteName: site.name,
-    title: `${site.name} — Réparation moto & scooter à ${site.address.city}`,
+    title: `${site.name} — Réparation moto & scooter à ${site.address.district}`,
     description:
-      "Atelier indépendant moto et scooter à Paris. Toutes marques, devis gratuit, diagnostic expliqué.",
+      "Atelier indépendant moto et scooter à Paris 13. Toutes marques, devis gratuit, diagnostic expliqué. Achat, vente et reprise.",
   },
   robots: {
     // La maquette ne doit jamais être indexée. À inverser à la mise en production.
@@ -75,22 +78,20 @@ function localBusinessJsonLd() {
       {
         "@type": "OpeningHoursSpecification",
         dayOfWeek: [
-          "Monday",
           "Tuesday",
           "Wednesday",
           "Thursday",
           "Friday",
+          "Saturday",
         ],
-        opens: "09:00",
+        opens: "10:00",
         closes: "19:00",
       },
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Saturday"],
-        opens: "09:00",
-        closes: "17:00",
-      },
     ],
+    makesOffer: services.map((s) => ({
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name: s.title, description: s.short },
+    })),
   };
 }
 

@@ -2,18 +2,19 @@
 
 /* ---------------------------------------------------------------------------
    Design system — L'As du 2 Roues
-   Registre : atelier authentique. Anthracite profond, accent orange sécurité,
+   Palette reprise de l'identité existante de l'atelier (carte de visite) :
+   noir profond, rouge pique, blanc cassé. Registre atelier authentique,
    typographie industrielle. Volontairement sobre en animations : le site doit
    convertir, pas impressionner.
    --------------------------------------------------------------------------- */
 @theme {
-  --color-ink: #0a0b0d;
-  --color-ink-2: #121418;
-  --color-ink-3: #1a1d23;
+  --color-ink: #0a0a0b;
+  --color-ink-2: #131315;
+  --color-ink-3: #1c1c20;
   --color-bone: #f6f5f2;
-  --color-bone-2: #ebe9e4;
-  --color-accent: #ff5a1f;
-  --color-accent-soft: #ff7a45;
+  --color-bone-2: #eae8e3;
+  --color-accent: #e11d26;
+  --color-accent-soft: #f0323b;
 
   --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;

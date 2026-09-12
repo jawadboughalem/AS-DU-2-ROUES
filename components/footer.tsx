@@ -1,15 +1,20 @@
 import Link from "next/link";
 import { services, site } from "@/lib/site";
+import { LogoMark } from "./logo";
 
 export function Footer() {
   return (
     <footer className="border-t border-bone/10 bg-ink pb-28 lg:pb-0">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 md:grid-cols-4">
         <div className="md:col-span-2">
-          <p className="display text-lg">{site.name}</p>
+          <div className="flex items-center gap-3">
+            <LogoMark className="h-10 w-10" />
+            <p className="display text-lg">{site.name}</p>
+          </div>
           <p className="mt-3 max-w-sm text-sm leading-relaxed text-bone/55">
-            Atelier indépendant de réparation et d&apos;entretien moto et
-            scooter à {site.address.city}. Toutes marques.
+            Atelier indépendant de réparation, d&apos;entretien et de dépannage
+            moto et scooter à {site.address.district}. Toutes marques. Achat,
+            vente et reprise.
           </p>
           <a
             href={site.phoneHref}

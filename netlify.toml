@@ -1,0 +1,25 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Le plugin officiel gère le rendu Next.js (pages statiques, routes serveur,
+# optimisation des images). Netlify l'installe automatiquement, mais on le
+# déclare pour que le comportement soit explicite et reproductible.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Les branches autres que main génèrent une URL de préproduction : c'est ce
+# lien qu'on envoie au client pour validation, jamais le dépôt GitHub.
+[context.deploy-preview]
+  command = "npm run build"
+
+# Un site en maquette ne doit jamais être indexé par erreur.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"

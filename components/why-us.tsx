@@ -6,6 +6,7 @@ const rows = [
   { label: "Le devis", us: "Établi après diagnostic, sur mesure", them: "Forfait standardisé, options en supplément" },
   { label: "Les pièces remplacées", us: "On vous les montre et on vous explique", them: "Remplacées, rarement expliquées" },
   { label: "Les modèles acceptés", us: "Toutes marques, y compris anciens modèles", them: "Marques et modèles récents en priorité" },
+  { label: "Acheter, vendre, faire reprendre", us: "Oui — c'est notre seconde activité", them: "Non, uniquement de l'entretien" },
   { label: "Le conseil", us: "On vous dit aussi ce qui peut attendre", them: "L'intérêt est de vendre la prestation" },
 ];
 
@@ -16,9 +17,11 @@ export function WhyUs() {
         <Eyebrow>Pourquoi un atelier indépendant</Eyebrow>
         <Title>Un garage, pas une chaîne.</Title>
         <p className="mt-5 text-base leading-relaxed text-ink/65">
-          Les centres rapides ont leurs avantages. Mais sur un deux-roues, ce
-          qui fait la différence, c&apos;est le mécanicien qui connaît votre
-          machine — et qui a le temps de vous l&apos;expliquer.
+          Les centres rapides affichent des volumes : des dizaines de milliers
+          de réparations par an. Nous, on préfère que votre moto ne soit pas la
+          soixante-millième. Ce qui fait la différence sur un deux-roues,
+          c&apos;est le mécanicien qui connaît votre machine — et qui a le temps
+          de vous l&apos;expliquer.
         </p>
       </div>
 

@@ -18,6 +18,18 @@ export function Practical() {
                 <br />
                 {site.address.zip} {site.address.city}
               </dd>
+              <dd className="mt-1.5 text-sm text-bone/45">{site.access}</dd>
+            </div>
+            <div>
+              <dt className="eyebrow text-bone/40">E-mail</dt>
+              <dd className="mt-2">
+                <a
+                  href={`mailto:${site.email}`}
+                  className="text-base text-bone/85 hover:text-accent"
+                >
+                  {site.email}
+                </a>
+              </dd>
             </div>
             <div>
               <dt className="eyebrow text-bone/40">Téléphone</dt>

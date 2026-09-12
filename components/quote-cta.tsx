@@ -4,9 +4,9 @@ import { Eyebrow, Title } from "./ui";
 import { QuoteForm } from "./quote-form";
 
 const arguments_ = [
-  "Un prix estimé sous 24 h ouvrées",
+  "Devis estimé ou créneau confirmé sous 24 h ouvrées",
   "Aucun engagement, aucun frais",
-  "Vous parlez directement au mécanicien",
+  "Vous parlez directement au mécanicien, pas à un centre d’appel",
   "Plus votre description est précise, plus l’estimation l’est",
 ];
 
@@ -16,11 +16,11 @@ export function QuoteCta() {
       <div
         aria-hidden
         className="pointer-events-none absolute -right-32 -bottom-32 h-[30rem] w-[30rem] rounded-full opacity-20 blur-[120px]"
-        style={{ background: "radial-gradient(circle, #ff5a1f 0%, transparent 65%)" }}
+        style={{ background: "radial-gradient(circle, #e11d26 0%, transparent 65%)" }}
       />
       <div className="relative mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-8 md:py-28 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
         <div className="lg:pt-4">
-          <Eyebrow>Demande de devis</Eyebrow>
+          <Eyebrow>Devis &amp; rendez-vous</Eyebrow>
           <Title className="max-w-[11ch]">
             Décrivez votre problème.
           </Title>
@@ -28,8 +28,9 @@ export function QuoteCta() {
             On s’occupe du reste.
           </p>
           <p className="mt-6 max-w-md text-base leading-relaxed text-bone/65">
-            Pas besoin de vous déplacer pour savoir combien ça coûte. Remplissez
-            ce formulaire, nous revenons vers vous avec une estimation.
+            Pas besoin de vous déplacer pour savoir combien ça coûte, ni pour
+            caler un passage à l&apos;atelier. Choisissez l&apos;onglet qui
+            correspond à votre besoin.
           </p>
 
           <ul className="mt-8 space-y-3">

@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { Phone } from "./icons";
+import { LogoMark, Wordmark } from "./logo";
 
 const nav = [
   { href: "#prestations", label: "Prestations" },
-  { href: "#deroulement", label: "Déroulement" },
+  { href: "#occasion", label: "Achat / Vente" },
   { href: "#tarifs", label: "Tarifs" },
   { href: "#avis", label: "Avis" },
   { href: "#infos", label: "Infos pratiques" },
@@ -15,19 +16,8 @@ export function Header() {
     <header className="absolute inset-x-0 top-0 z-40">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
         <Link href="/" className="group flex items-center gap-3" aria-label={`${site.name} — accueil`}>
-          {/* Marque typographique provisoire, en attendant le logo du client */}
-          <span
-            aria-hidden
-            className="grid h-10 w-10 place-items-center rounded-lg bg-accent font-display text-lg font-black text-white"
-          >
-            A
-          </span>
-          <span className="leading-none">
-            <span className="display block text-[0.95rem] tracking-tight text-bone">
-              L&apos;As du 2 Roues
-            </span>
-            <span className="eyebrow text-bone/45">Paris</span>
-          </span>
+          <LogoMark className="h-11 w-11" />
+          <Wordmark />
         </Link>
 
         <nav aria-label="Navigation principale" className="hidden items-center gap-7 lg:flex">
@@ -76,7 +66,7 @@ export function Header() {
                 href="#devis"
                 className="mt-1 block border-t border-bone/10 px-4 py-2.5 text-sm font-semibold text-accent"
               >
-                Demander un devis
+                Devis / Rendez-vous
               </a>
             </div>
           </details>

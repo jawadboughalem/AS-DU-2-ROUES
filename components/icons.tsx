@@ -37,6 +37,24 @@ export const Icons: Record<string, (p: IconProps) => React.JSX.Element> = {
       <path d="M13.5 3 6 13h5l-1.5 8L18 11h-5z" stroke="currentColor" strokeLinejoin="round" />
     </svg>
   ),
+  wrench: ({ className = base }) => (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.6} className={className} aria-hidden>
+      <path
+        d="M20 5.5a5 5 0 0 1-6.6 6.1L6.3 18.7a2.1 2.1 0 0 1-3-3l7.1-7.1A5 5 0 0 1 16.5 2l-3 3 2.5 2.5 3-3c.6.9 1 2 1 3z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  tow: ({ className = base }) => (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.6} className={className} aria-hidden>
+      <circle cx="6" cy="17" r="2.5" stroke="currentColor" />
+      <circle cx="17.5" cy="17" r="2.5" stroke="currentColor" />
+      <path d="M8.5 17h6.5M4 17H3v-4l3-3h4l2 3" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M13 10 19 4h2" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M20 17h1v-5l-4-2" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
   chain: ({ className = base }) => (
     <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.6} className={className} aria-hidden>
       <circle cx="6.5" cy="12" r="3" stroke="currentColor" />
