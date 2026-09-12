@@ -36,7 +36,7 @@ C'est votre meilleur avantage face à eux, et il mérite sa place sur le site.
 
 ## 2. Les trois formules
 
-### Offre A — Site vitrine · 1 990 €
+### Offre 1 — Le site · 1 190 €
 
 - Site complet : accueil, prestations, atelier, achat/vente/reprise, tarifs,
   contact, mentions légales
@@ -50,7 +50,7 @@ C'est votre meilleur avantage face à eux, et il mérite sa place sur le site.
 - Mise en ligne, nom de domaine, formation
 - 2 séries de retouches
 
-### Offre B — Site + rendez-vous en ligne · 2 990 €  ← **recommandée**
+### Offre 2 — Le site + les rendez-vous · 1 890 €  ← **recommandée**
 
 Tout ce qui précède, plus :
 
@@ -64,7 +64,7 @@ Tout ce qui précède, plus :
 - Formation à l'espace d'administration + guide d'une page
 - **3 mois de maintenance offerts**
 
-### Offre C — Visibilité · 3 890 €
+### Offre 3 — Visibilité · 2 690 €
 
 Tout ce qui précède, plus :
 
@@ -77,7 +77,7 @@ Tout ce qui précède, plus :
 
 ## 3. Ce que je recommande, et pourquoi
 
-**L'offre B**, puisque la prise de rendez-vous est votre priorité.
+**L'offre 2**, puisque la prise de rendez-vous est votre priorité.
 
 **Mais un avertissement, et il est important.** Je ne vous propose pas un agenda
 avec des créneaux réservés automatiquement, et c'est volontaire. Sans avoir vu
@@ -91,12 +91,25 @@ votre espace, vous validez ou vous proposez autre chose en un clic, et il reçoi
 la confirmation. Vous gardez la main sur votre planning, et aucun rendez-vous
 n'est annulé après coup.
 
-**Sur le prix.** Un site vitrine seul se situe entre 1 500 € et 3 000 € chez un
-indépendant. Dès qu'on y ajoute une base de données, un compte sécurisé et un
-espace d'administration sur mesure, on est sur un développement applicatif :
-le marché est plutôt entre 4 000 € et 8 000 €.
+**Sur le prix.** Voici ce qui se pratique réellement, pour que vous puissiez
+comparer sans avoir à me croire sur parole :
 
-Je vous propose **2 990 €** en contrepartie de trois choses :
+| Offre | Prix constaté |
+|---|---|
+| Thème WordPress standard, 5–7 pages | 590 € |
+| Site de garage clé en main, no-code | 1 190 € TTC |
+| Site de garage sur-mesure | 1 690 € TTC |
+| Site d'artisan chez un indépendant | 1 200 – 2 500 € |
+| Agence web, médiane tous sites confondus | 5 200 € |
+
+Je vous propose **1 890 €** pour l'offre 2 — le site, les rendez-vous et votre
+espace de gestion.
+
+**Et pour être franc : moins cher, ça existe.** À 590 € vous aurez un thème
+WordPress standard, sans sur-mesure et sans espace de gestion. À périmètre
+égal, non.
+
+En contrepartie de ce tarif, je vous demande trois choses :
 
 - un acompte de 40 % à la commande ;
 - l'autorisation de présenter le site dans mon portfolio ;
@@ -115,6 +128,13 @@ Je vous propose **2 990 €** en contrepartie de trois choses :
 ---
 
 ## 5. Coûts récurrents — à votre charge, et réduits au minimum
+
+**Le coût réel sur trois ans**, qui est la seule comparaison honnête :
+
+| | À la signature | Total sur 3 ans | Vous possédez ? |
+|---|---|---|---|
+| Abonnement type Solocal / Simplébo | 0 € | **3 600 €** | Non |
+| **Cette proposition (offre 2)** | **1 890 €** | **1 935 €** | **Oui, intégralement** |
 
 | Poste | Coût | Payé à |
 |---|---|---|
@@ -142,7 +162,7 @@ les comptes.
 | **Sérénité** | **39 €/mois** | Hébergement, domaine, sauvegardes, mises à jour, surveillance, 30 min de modifications par mois |
 | Croissance | 79 €/mois | + 1 h de modifications, suivi du référencement, rapport trimestriel |
 
-Offerte pendant 3 mois avec l'offre B. Résiliable avec un mois de préavis.
+Offerte pendant 3 mois avec l'offre 2. Résiliable avec un mois de préavis.
 
 ---
 
@@ -160,7 +180,7 @@ Offerte pendant 3 mois avec l'offre B. Résiliable avec un mois de préavis.
 | 8. Corrections | Prise en compte des retours | Moi | 3 jours |
 | 9. Mise en ligne | Domaine, e-mails, fiche Google, formation | Moi | 1 jour |
 
-**Délai total : 6 à 7 semaines** pour l'offre B, à condition que les contenus
+**Délai total : 6 à 7 semaines** pour l'offre 2, à condition que les contenus
 soient fournis dans les temps. C'est le seul point qui peut décaler la
 livraison.
 
@@ -168,7 +188,7 @@ livraison.
 
 ## 8. Conditions
 
-- **Acompte :** 40 % à la commande, soit 1 196 € pour l'offre B.
+- **Acompte :** 40 % à la commande, soit 756 € pour l'offre 2.
 - **Solde :** 60 % à la mise en ligne, payable à 15 jours.
 - **Propriété :** le site, le code, le domaine et les comptes vous appartiennent
   intégralement à réception du solde.

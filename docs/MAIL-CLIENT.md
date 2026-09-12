@@ -1,122 +1,155 @@
 # Mail à envoyer au client
 
-> **Mode d'emploi**
-> - Remplace `[Prénom]` par son prénom.
-> - Joins la proposition en PDF et les captures de la maquette.
-> - **Mieux que des captures : mets le lien de préproduction Netlify.** Un site
->   qu'il peut ouvrir sur son téléphone vaut dix pièces jointes.
-> - Envoie tôt le matin ou après 19 h : un garagiste ne lit pas ses mails entre
->   10 h et 19 h — ses propres horaires le disent.
-> - **N'annonce jamais le prix avant la valeur.** Il se lit après, jamais avant.
+> **Avant d'envoyer**
+> - Remplacer `[Prénom]` et `[lien]`.
+> - Envoyer tôt le matin ou après 19 h. Sa carte dit 10 h – 19 h : il ne lira
+>   pas ses mails dans la journée.
+> - Joindre la proposition en PDF. Pas les captures : le lien vaut mieux.
+> - **Le prix arrive après la valeur.** Jamais en ouverture.
+> - Le ton ci-dessous est volontairement direct et sans jargon. Si vous vous
+>   tutoyez déjà, passer au « tu » ne casse rien — le reste tient tel quel.
 
 ---
 
-**Objet :** Votre site — première version en ligne et proposition
+**Objet :** J'ai commencé votre site — un premier aperçu
 
 ---
 
-Bonjour [Prénom],
+Salut [Prénom],
 
-Comme convenu, j'ai commencé à travailler sur le site de L'As du 2 Roues. Voici
-une première version, que vous pouvez ouvrir directement :
+J'ai avancé sur le site. Vous pouvez le voir ici :
 
-**[lien de préproduction]**
+**[lien]**
 
-Ouvrez-le sur votre téléphone, c'est comme ça que la majorité de vos clients le
-verront. Les photos, les textes et les tarifs affichés sont provisoires : ils
-seront remplacés par les vôtres.
+Ouvrez-le sur votre téléphone, c'est comme ça que vos clients le verront.
+Les photos et les tarifs affichés sont provisoires — c'est une base pour qu'on
+parle de concret plutôt que dans le vide.
 
-J'ai repris les informations de votre carte de visite : l'adresse, le
-téléphone, les horaires du mardi au samedi, et vos couleurs — le noir et le
-rouge de votre logo.
+J'ai repris ce qu'il y avait sur votre carte : l'adresse, le numéro, les
+horaires du mardi au samedi, et le noir et rouge de votre logo.
 
-**Avant de la regarder, deux choses que j'ai constatées.**
+---
 
-**1. On vous confond avec vos concurrents.** J'ai cherché votre atelier sur
-Google : ce sont L'Artisan du Deux-Roues, L'Art du 2 Roues et Le Palais du
-2 Roues qui remontent. Vos noms se ressemblent trop et rien en ligne ne vous
-distingue. C'est le premier problème que ce site règle.
+**Deux trucs que j'ai remarqués en préparant ça.**
 
-**2. Moto'Minute a ouvert un centre dans votre arrondissement**, boulevard de
-l'Hôpital. Leur site propose la demande de devis et de rendez-vous dès la page
-d'accueil. Face à ça, ne pas avoir de site n'est plus neutre.
+**Le premier : on vous confond.** J'ai cherché « L'As du 2 Roues » sur Google.
+Ce qui remonte, c'est L'Artisan du Deux-Roues, L'Art du 2 Roues, Le Palais du
+2 Roues. Vos noms se ressemblent trop et rien ne vous distingue en ligne. Des
+clients qui vous cherchent atterrissent chez eux.
 
-**Ce que j'ai prévu, concrètement :**
+**Le deuxième : Moto'Minute a ouvert boulevard de l'Hôpital**, à dix minutes
+de chez vous. J'ai regardé leur site en détail. Et j'y ai trouvé quelque chose
+d'intéressant : **aucun de leurs trois centres n'ouvre le samedi.** Vous si.
 
-- **La demande de rendez-vous en ligne**, puisque c'est votre priorité — avec
-  **votre espace privé** où vous voyez toutes les demandes, la moto concernée,
-  le problème décrit, et où vous confirmez le créneau en un clic. Le client
-  reçoit alors sa confirmation automatiquement.
-- **La demande de devis** : le client renseigne sa marque, son modèle, son
-  kilométrage et décrit son problème. Vous recevez un e-mail complet et vous
-  rappelez quand vous êtes disponible, au lieu d'être interrompu en pleine
-  intervention.
-- **Une section dédiée à l'achat, la vente et la reprise.** C'est ce que vous
-  faites et que Moto'Minute ne fait pas — j'en ai fait un argument central
-  plutôt qu'une ligne perdue en bas de page.
-- Une page par prestation, pour apparaître sur les recherches précises du type
-  « réparation scooter Paris 13 ».
-- Un bouton d'appel toujours visible sur téléphone, et l'itinéraire en un clic.
+Pour quelqu'un qui bosse en semaine et qui ne peut pas déposer son scooter à
+14 h un mardi, c'est *l'*argument. Je l'ai mis en avant dès le haut de la page.
 
-**Un point sur lequel je préfère être franc.** Je n'ai pas prévu un agenda où le
-client réserve lui-même un créneau ferme. Sans avoir vu la moto, vous ne pouvez
-pas savoir combien de temps prendra l'intervention, ni quelles pièces commander.
-Vous seriez obligé d'annuler des rendez-vous, et ce sont des avis négatifs
-assurés.
+---
 
-Le système fonctionne dans l'autre sens : **le client demande, vous confirmez.**
-Il indique ses disponibilités, vous validez ou vous proposez autre chose en un
-clic. Vous gardez la main sur votre planning.
+**Ce que j'ai prévu :**
 
-**Le tarif.** Un site vitrine se situe entre 1 500 € et 3 000 € chez un
-indépendant. Avec un espace d'administration sur mesure comme celui-ci, le
-marché est plutôt entre 4 000 € et 8 000 €. Je vous propose **2 990 €**, en
-contrepartie de l'autorisation de présenter ce site dans mon portfolio et d'un
-avis écrit à la livraison si le travail vous convient. Le détail est dans la
-proposition jointe, avec deux autres formules.
+**La prise de rendez-vous**, puisque c'est ce que vous vouliez en premier. Avec
+**votre espace à vous**, où vous voyez toutes les demandes : quelle moto, quel
+problème, quand le client est dispo. Vous validez le créneau en un clic, il
+reçoit sa confirmation automatiquement.
 
-À cela s'ajoute environ **15 € par an** de nom de domaine. L'hébergement est
-gratuit. Le site vous appartient entièrement, ainsi que le domaine et tous les
-accès : vous ne dépendez de personne.
+**Je n'ai volontairement pas fait un agenda où le client réserve tout seul.**
+Vous ne pouvez pas savoir combien de temps prend une intervention avant d'avoir
+vu la machine. Vous seriez obligé d'annuler des rendez-vous, et ça finit en
+avis à une étoile. Donc c'est l'inverse : il demande, vous confirmez. Vous
+gardez la main.
 
-**La suite.** J'aimerais passer une heure à l'atelier : j'ai des questions sur
-vos prestations et vos tarifs, et j'en profiterais pour prendre des photos. Les
-vraies photos de votre atelier feront plus pour la confiance que n'importe
-quelle image achetée sur internet. Si vous avez le fichier original de votre
-logo, prévoyez-le aussi.
+**La demande de devis.** Le client renseigne sa marque, son modèle, son
+kilométrage et décrit sa panne. Vous recevez un mail complet et vous rappelez
+quand vous avez cinq minutes — au lieu de décrocher les mains dans le cambouis
+pour quelqu'un qui voulait juste un prix.
 
-Dites-moi quel jour vous arrange, et n'hésitez pas à m'appeler si c'est plus
-simple.
+**L'achat, la vente et la reprise.** Vous le faites, Moto'Minute ne le fait
+pas. Je lui ai donné une vraie place sur le site au lieu d'une ligne perdue en
+bas de page.
 
-Bien à vous,
+Et une page par prestation, pour sortir sur les recherches précises genre
+« réparation scooter Paris 13 ».
 
-Jawad Boughalem
+---
+
+**Le prix.**
+
+Je suis allé voir ce qui se pratique vraiment, pour vous donner un chiffre
+défendable et pas un chiffre en l'air.
+
+Un site de garage tout fait, c'est **1 190 €**. Le même en sur-mesure, **1 690 €**.
+Un site d'artisan chez un indépendant, **1 200 à 2 500 €**. En agence, la
+médiane est à 5 200 €.
+
+Je vous propose **1 890 €** pour l'ensemble — le site *et* les rendez-vous
+*et* votre espace de gestion.
+
+Et je vais être franc : **moins cher, ça existe.** À 590 € vous trouverez un
+thème WordPress standard, sans sur-mesure et sans espace de gestion. À
+périmètre égal, non.
+
+Si le budget coince, on peut aussi commencer par le site seul à **1 190 €** et
+ajouter les rendez-vous plus tard, quand vous aurez vu ce que ça ramène.
+
+**Ce que ça donne dans le temps :**
+
+| | Au départ | Sur 3 ans | Vous possédez ? |
+|---|---|---|---|
+| Un abonnement type Solocal | 0 € | 3 600 € | Non |
+| Cette proposition | 1 890 € | 1 935 € | Oui, tout |
+
+Les 45 € d'écart, c'est le nom de domaine, 15 € par an. L'hébergement ne coûte
+rien. Et tout est à votre nom : le site, le domaine, les accès. Si un jour vous
+voulez changer de prestataire, vous partez avec tout.
+
+---
+
+**La suite.**
+
+J'aimerais passer une heure à l'atelier. J'ai des questions sur vos
+prestations et vos tarifs, et surtout je voudrais prendre des photos. Les
+vraies photos de votre atelier, avec vous dedans, ça vaut dix fois mieux que
+des images achetées sur internet — et c'est exactement ce qu'une chaîne ne
+peut pas faire.
+
+Si vous avez le fichier d'origine de votre logo, sortez-le aussi, ça m'évitera
+de le redessiner.
+
+Dites-moi quand ça vous arrange. Ou appelez-moi, c'est plus rapide.
+
+À bientôt,
+
+Jawad
 [téléphone]
-[e-mail]
 
 ---
 
-## Variante courte
+## Version courte
 
-**Objet :** Votre site — première version en ligne
+**Objet :** J'ai commencé votre site
 
-Bonjour [Prénom],
+Salut [Prénom],
 
-J'ai commencé à travailler sur votre site, vous pouvez le voir ici :
-**[lien]** — ouvrez-le sur votre téléphone. Photos et textes provisoires.
+Le site avance, vous pouvez le voir ici : **[lien]** — ouvrez-le sur votre
+téléphone. Photos et tarifs provisoires.
 
-J'ai repris l'adresse, les horaires et les couleurs de votre carte de visite,
-et j'ai mis en avant l'achat/vente/reprise : c'est ce que Moto'Minute, qui vient
-d'ouvrir boulevard de l'Hôpital, ne propose pas.
+Deux choses en préparant ça. D'abord, quand on cherche votre nom sur Google, ce
+sont vos concurrents qui sortent. Ensuite, j'ai regardé Moto'Minute qui vient
+d'ouvrir boulevard de l'Hôpital : **aucun de leurs centres n'ouvre le samedi.**
+Vous si. C'est votre meilleur argument, je l'ai mis en avant.
 
-La prise de rendez-vous est prévue comme vous le souhaitiez, avec **votre espace
-privé** pour voir les demandes et confirmer les créneaux en un clic.
+La prise de rendez-vous est prévue comme vous vouliez, avec votre espace pour
+voir les demandes et confirmer en un clic. J'ai aussi mis en valeur
+l'achat/vente/reprise, que la chaîne ne fait pas.
 
-Ma proposition est jointe : **2 990 €** pour l'ensemble, plus environ 15 € par an
-de nom de domaine. Le site et tous les accès vous appartiennent.
+Pour le prix : un site de garage tout fait c'est 1 190 €, en agence la médiane
+est à 5 200 €. Je vous propose **1 890 €** pour le site *et* les rendez-vous
+*et* votre espace. Moins cher ça existe, mais pas à périmètre égal. Détail en
+pièce jointe.
 
-J'aimerais passer une heure à l'atelier pour les photos et quelques questions.
-Quel jour vous arrangerait ?
+J'aimerais passer une heure à l'atelier pour les photos et deux ou trois
+questions. Quel jour vous arrange ?
 
-Bien à vous,
+À bientôt,
 Jawad
