@@ -4,7 +4,11 @@
 > - Remplacer `[Prénom]` et `[lien]`.
 > - Envoyer tôt le matin ou après 19 h. Sa carte dit 10 h – 19 h : il ne lira
 >   pas ses mails dans la journée.
-> - Joindre la proposition en PDF. Pas les captures : le lien vaut mieux.
+> - Joindre **deux** pièces : la proposition et « Ce dont j'aurai besoin ».
+>   Pas les captures d'écran : le lien vaut mieux.
+> - **Trois questions maximum dans le mail.** Une liste de vingt questions dans
+>   un premier contact ne reçoit aucune réponse. Le but de ce mail est
+>   d'obtenir un rendez-vous, pas de collecter des informations.
 > - **Le prix arrive après la valeur.** Jamais en ouverture.
 > - Le ton ci-dessous est volontairement direct et sans jargon. Si vous vous
 >   tutoyez déjà, passer au « tu » ne casse rien — le reste tient tel quel.
@@ -116,7 +120,18 @@ peut pas faire.
 Si vous avez le fichier d'origine de votre logo, sortez-le aussi, ça m'évitera
 de le redessiner.
 
-Dites-moi quand ça vous arrange. Ou appelez-moi, c'est plus rapide.
+**Trois questions, et je vous laisse tranquille :**
+
+1. Est-ce que ça vous plaît, dans l'idée ?
+2. Est-ce qu'il manque quelque chose d'important, ou qu'il y a un truc qui ne
+   va pas ?
+3. Quel jour vous arrangerait pour que je passe une heure à l'atelier ?
+
+Le reste — les photos, les tarifs, les textes — on le verra ensemble sur place,
+c'est bien plus rapide que par mail. J'ai joint la liste de ce dont j'aurai
+besoin, juste pour que vous sachiez à quoi vous attendre. **Rien à préparer.**
+
+Ou appelez-moi, c'est encore plus rapide.
 
 À bientôt,
 
@@ -148,8 +163,12 @@ est à 5 200 €. Je vous propose **1 890 €** pour le site *et* les rendez-vou
 *et* votre espace. Moins cher ça existe, mais pas à périmètre égal. Détail en
 pièce jointe.
 
-J'aimerais passer une heure à l'atelier pour les photos et deux ou trois
-questions. Quel jour vous arrange ?
+Trois questions et je vous laisse : est-ce que ça vous plaît dans l'idée ?
+Est-ce qu'il manque quelque chose ? Et quel jour vous arrangerait pour que je
+passe une heure à l'atelier ?
+
+Le reste — photos, tarifs, textes — on le verra sur place. J'ai joint la liste
+de ce dont j'aurai besoin, rien à préparer.
 
 À bientôt,
 Jawad
