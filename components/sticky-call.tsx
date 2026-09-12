@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { site } from "@/lib/site";
 import { Phone } from "./icons";
 
@@ -18,13 +19,13 @@ export function StickyCall() {
           <Phone className="h-4 w-4" />
           Appeler l&apos;atelier
         </a>
-        <a
-          href="#devis"
+        <Link
+          href="/#devis"
           data-cta="sticky-quote"
           className="flex flex-1 items-center justify-center rounded-full border border-bone/25 py-3.5 text-sm font-semibold text-bone"
         >
           Devis gratuit
-        </a>
+        </Link>
       </div>
     </div>
   );

@@ -9,9 +9,13 @@
  *
  * Sort en code 1 à la première anomalie : utilisable en CI.
  */
+/* eslint-disable @typescript-eslint/no-unused-expressions --
+   Les contrôles s'écrivent « condition ? ok(...) : fail(...) » : la forme
+   ternaire garde une assertion par ligne, ce qui rend le fichier lisible
+   comme une liste de vérifications. */
 import { chromium } from "playwright";
 
-const URL = process.env.RECETTE_URL ?? "http://127.0.0.1:3000/";
+const BASE = process.env.RECETTE_URL ?? "http://127.0.0.1:3000/";
 const browser = await chromium.launch(
   // En local, Playwright trouve son propre Chromium ; CHROMIUM_PATH sert
   // aux environnements où le navigateur est déjà installé ailleurs.
@@ -31,7 +35,7 @@ const fail = (m) => fails.push(m);
   p.on("console", (m) => { if (m.type() === "error") errs.push(m.text()); });
   p.on("pageerror", (e) => errs.push("pageerror: " + e.message));
   p.on("response", (r) => { if (r.status() >= 400) bad.push(`${r.status()} ${r.url()}`); });
-  await p.goto(URL, { waitUntil: "networkidle" });
+  await p.goto(BASE, { waitUntil: "networkidle" });
   await p.waitForTimeout(900);
   errs.length ? fail(`Erreurs console : ${errs.join(" | ")}`) : ok("Aucune erreur console");
   bad.length ? fail(`Requêtes en échec : ${bad.join(" | ")}`) : ok("Aucune requête en échec");
@@ -42,7 +46,7 @@ const fail = (m) => fails.push(m);
 for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
   const ctx = await browser.newContext({ ...L, viewport: { width: w, height: 900 } });
   const p = await ctx.newPage();
-  await p.goto(URL, { waitUntil: "networkidle" });
+  await p.goto(BASE, { waitUntil: "networkidle" });
   await p.waitForTimeout(400);
   const over = await p.evaluate(() => {
     const d = document.documentElement;
@@ -63,7 +67,7 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
 {
   const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
   const p = await ctx.newPage();
-  await p.goto(URL, { waitUntil: "networkidle" });
+  await p.goto(BASE, { waitUntil: "networkidle" });
   const tabs = p.locator('[role="tab"]');
   (await tabs.count()) === 2 ? ok("Deux onglets présents") : fail("Nombre d'onglets inattendu");
   await tabs.nth(1).click();
@@ -83,7 +87,7 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
 {
   const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
   const p = await ctx.newPage();
-  await p.goto(URL, { waitUntil: "networkidle" });
+  await p.goto(BASE, { waitUntil: "networkidle" });
   await p.locator('button[type="submit"]').click();
   await p.waitForTimeout(400);
   const submitted = await p.locator("text=Demande envoyée").isVisible().catch(() => false);
@@ -109,7 +113,7 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
 {
   const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
   const p = await ctx.newPage();
-  await p.goto(URL, { waitUntil: "networkidle" });
+  await p.goto(BASE, { waitUntil: "networkidle" });
   const broken = await p.evaluate(() =>
     [...document.querySelectorAll('a[href^="#"]')]
       .map((a) => a.getAttribute("href"))
@@ -128,7 +132,7 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
 {
   const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
   const p = await ctx.newPage();
-  await p.goto(URL, { waitUntil: "networkidle" });
+  await p.goto(BASE, { waitUntil: "networkidle" });
   const a11y = await p.evaluate(() => {
     const r = {};
     r.h1 = document.querySelectorAll("h1").length;
@@ -146,10 +150,10 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
   a11y.btnNoName === 0 ? ok("Tous les boutons ont un nom accessible") : fail(`${a11y.btnNoName} boutons sans nom`);
   a11y.lang === "fr" ? ok('lang="fr" présent') : fail(`lang = "${a11y.lang}"`);
 
-  const focus = await p.evaluate(async () => {
-    const el = document.querySelector('a[href="#devis"]');
+  const focus = await p.evaluate(() => {
+    const el = document.querySelector('a[href="/#devis"], a[href="#devis"]');
+    if (!el) return false;
     el.focus();
-    const s = getComputedStyle(el, ":focus-visible");
     return document.activeElement === el;
   });
   focus ? ok("Navigation clavier : les liens prennent le focus") : warn("Focus clavier à vérifier manuellement");
@@ -160,7 +164,7 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
 {
   const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
   const p = await ctx.newPage();
-  await p.goto(URL, { waitUntil: "networkidle" });
+  await p.goto(BASE, { waitUntil: "networkidle" });
   const seo = await p.evaluate(() => {
     const ld = document.querySelector('script[type="application/ld+json"]');
     let parsed = null;
@@ -189,7 +193,7 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
 {
   const ctx = await browser.newContext({ ...L, viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   const p = await ctx.newPage();
-  await p.goto(URL, { waitUntil: "networkidle" });
+  await p.goto(BASE, { waitUntil: "networkidle" });
   const bar = p.locator('a[data-cta="sticky-call"]');
   (await bar.isVisible()) ? ok("Barre d'appel visible sur mobile") : fail("Barre d'appel absente sur mobile");
   await p.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
@@ -204,9 +208,54 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
 {
   const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
   const p = await ctx.newPage();
-  await p.goto(URL, { waitUntil: "networkidle" });
+  await p.goto(BASE, { waitUntil: "networkidle" });
   const vis = await p.locator('a[data-cta="sticky-call"]').isVisible().catch(() => false);
   !vis ? ok("Barre d'appel masquée sur ordinateur") : warn("Barre d'appel visible sur ordinateur");
+  await ctx.close();
+}
+
+// ---------- 10. Parcours de toutes les pages internes ----------
+{
+  const ctx = await browser.newContext({ ...L, viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  await p.goto(BASE, { waitUntil: "networkidle" });
+
+  const links = await p.evaluate(() =>
+    [...new Set(
+      [...document.querySelectorAll('a[href^="/"]')]
+        .map((a) => a.getAttribute("href"))
+        .filter((h) => h && !h.startsWith("//") && !h.includes("#")),
+    )],
+  );
+  links.length >= 10
+    ? ok(`${links.length} pages internes liées depuis l'accueil`)
+    : warn(`Seulement ${links.length} pages internes liées`);
+
+  for (const href of links) {
+    const errs = [];
+    p.on("pageerror", (e) => errs.push(e.message));
+    const res = await p.goto(new URL(href, BASE).toString(), { waitUntil: "networkidle" });
+    const status = res?.status() ?? 0;
+    if (status !== 200) {
+      fail(`${href} répond ${status}`);
+      continue;
+    }
+    const info = await p.evaluate(() => ({
+      h1: document.querySelectorAll("h1").length,
+      title: document.title,
+      desc: document.querySelector('meta[name="description"]')?.content ?? "",
+      dead: [...document.querySelectorAll('a[href^="#"]')]
+        .map((a) => a.getAttribute("href"))
+        .filter((h) => h !== "#" && !document.querySelector(h)).length,
+    }));
+    const problems = [];
+    if (info.h1 !== 1) problems.push(`${info.h1} h1`);
+    if (!info.title || info.title.length > 70) problems.push(`title de ${info.title.length} car.`);
+    if (info.desc.length > 165) problems.push(`description de ${info.desc.length} car.`);
+    if (info.dead) problems.push(`${info.dead} ancre(s) morte(s)`);
+    if (errs.length) problems.push(`erreur JS : ${errs[0]}`);
+    problems.length ? fail(`${href} — ${problems.join(", ")}`) : ok(`${href} — page saine`);
+  }
   await ctx.close();
 }
 

@@ -1,3 +1,6 @@
+export { services, findService } from "./services";
+export type { Service } from "./services";
+
 /**
  * SOURCE UNIQUE DE VÉRITÉ pour toutes les informations de l'atelier.
  *
@@ -53,74 +56,6 @@ export const site = {
     "SYM", "Suzuki", "Kawasaki", "Vespa", "BMW",
   ],
 } as const;
-
-export type Service = {
-  slug: string;
-  title: string;
-  short: string;
-  bullets: readonly string[];
-  icon: string;
-};
-
-/** Prestations mécaniques. Achat / vente / reprise est traité à part. */
-export const services: readonly Service[] = [
-  {
-    slug: "entretien-revision",
-    title: "Entretien & révision",
-    short: "Vidange, filtres, bougies, contrôle complet selon les préconisations constructeur.",
-    bullets: ["Vidange moteur", "Filtres à air et à huile", "Bougies", "Contrôle 20 points"],
-    icon: "oil",
-  },
-  {
-    slug: "reparation",
-    title: "Réparation mécanique",
-    short: "Du petit dépannage à la remise en état moteur, sur devis validé avant intervention.",
-    bullets: ["Moteur & cylindre", "Carburation & injection", "Suspension", "Carrosserie"],
-    icon: "wrench",
-  },
-  {
-    slug: "diagnostic",
-    title: "Diagnostic",
-    short: "Recherche de panne à la valise et à l'oreille, avant tout devis.",
-    bullets: ["Lecture des codes défaut", "Test de compression", "Contrôle injection", "Rapport expliqué"],
-    icon: "diag",
-  },
-  {
-    slug: "depannage",
-    title: "Dépannage",
-    short: "Immobilisé dans Paris ? On intervient ou on récupère le véhicule.",
-    bullets: ["Intervention sur place", "Enlèvement du véhicule", "Panne de démarrage", "Crevaison"],
-    icon: "tow",
-  },
-  {
-    slug: "pneumatiques",
-    title: "Pneumatiques",
-    short: "Montage, équilibrage et remplacement toutes tailles, moto comme scooter.",
-    bullets: ["Montage & équilibrage", "Valve neuve", "Contrôle de pression", "Reprise de l'ancien pneu"],
-    icon: "tire",
-  },
-  {
-    slug: "freinage",
-    title: "Freinage",
-    short: "Plaquettes, disques, purge du circuit. La sécurité ne se négocie pas.",
-    bullets: ["Plaquettes avant / arrière", "Disques", "Purge liquide de frein", "Contrôle des durites"],
-    icon: "brake",
-  },
-  {
-    slug: "transmission",
-    title: "Transmission",
-    short: "Kit chaîne, courroie, galets, variateur, embrayage.",
-    bullets: ["Kit chaîne complet", "Courroie & galets", "Variateur", "Embrayage"],
-    icon: "chain",
-  },
-  {
-    slug: "electricite",
-    title: "Électricité",
-    short: "Batterie, démarreur, alternateur, faisceau, éclairage.",
-    bullets: ["Batterie & charge", "Démarreur", "Faisceau électrique", "Éclairage & clignotants"],
-    icon: "bolt",
-  },
-];
 
 export const process = [
   {

@@ -18,11 +18,11 @@ Sert aussi de base à l'étude de cas portfolio.
 | Analyse de prix | ✅ Fait — voir `ANALYSE-PRIX.md` |
 | Maquette page d'accueil | ✅ Fait |
 | Identité visuelle | ✅ Reprise du logo existant (noir / rouge / pique) |
-| Recette automatisée | ✅ 34 contrôles verts |
-| Déploiement | 🟡 Pipeline vert, Pages à activer une fois à la main |
+| Recette automatisée | ✅ 47 contrôles verts sur 12 pages |
+| Déploiement | ✅ En ligne — https://jawadboughalem.github.io/AS-DU-2-ROUES/ |
 | Envoi réel du formulaire | ⬜ À faire |
-| Pages par prestation | ⬜ À faire |
-| Mentions légales / confidentialité | ⬜ À faire |
+| Pages par prestation | ✅ 8 pages livrées |
+| Mentions légales / confidentialité | ✅ Livrées, champs légaux à compléter |
 | Espace d'administration | ⬜ À faire |
 | Proposition et mail client | ✅ Prêts — mail aussi livré en Word |
 
@@ -116,14 +116,12 @@ compte tiers tout en gardant le chemin vers Netlify ouvert.
 
 ## Prochaines étapes techniques
 
-1. Activer GitHub Pages une fois (Settings → Pages → branche `gh-pages`)
-2. Brancher l'envoi réel du formulaire — nécessite la bascule sur Netlify
-3. Pages dédiées par prestation (8 pages, référencement local)
-4. Mentions légales et politique de confidentialité
-5. Espace d'administration : Supabase (base + authentification), liste des
+1. Brancher l'envoi réel du formulaire — nécessite la bascule sur Netlify
+2. Espace d'administration : Supabase (base + authentification), liste des
    demandes, confirmation en un clic
-6. Ajouter le champ **immatriculation** au formulaire — le concurrent le
-   demande, cela identifie le véhicule sans effort pour le client
+3. Page « L'atelier » (à propos), une fois les photos prises
+4. Remplacer les emplacements photo par les vraies images
+5. Compléter les champs légaux : SIRET, forme juridique, assurance, médiateur
 
 ---
 
@@ -140,4 +138,9 @@ compte tiers tout en gardant le chemin vers Netlify ouvert.
   `claude/mcp-blackbox-cli-setup-oxwb3w`
 - Pipeline de déploiement mis en place
 - Analyse de prix refaite sur comparables réels, tarif révisé à 1 890 €
-- Proposition commerciale et mail client prêts
+- Proposition commerciale et mail client prêts, mail livré aussi en Word
+- GitHub Pages activé, maquette en ligne
+- 8 pages prestation, page pilier, mentions légales et confidentialité
+- Champ immatriculation ajouté au formulaire
+- Recette étendue au parcours complet du site : elle a détecté une ancre morte
+  vers `#devis` sur les 11 pages internes, corrigée

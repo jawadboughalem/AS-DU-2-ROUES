@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { services } from "@/lib/site";
 import { Icons, Arrow } from "./icons";
 import { Eyebrow, Section, Title } from "./ui";
@@ -23,8 +24,8 @@ export function Services() {
           const Icon = Icons[service.icon];
           return (
             <li key={service.slug}>
-              <a
-                href="#devis"
+              <Link
+                href={`/prestations/${service.slug}`}
                 className="group flex h-full flex-col rounded-2xl border border-ink/10 bg-white p-6 transition-all duration-200 hover:-translate-y-1 hover:border-ink/25 hover:shadow-[0_18px_40px_-24px_rgba(10,11,13,0.45)]"
               >
                 <span className="mb-5 grid h-11 w-11 place-items-center rounded-xl bg-accent/10 text-accent">
@@ -42,10 +43,10 @@ export function Services() {
                   ))}
                 </ul>
                 <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
-                  Demander un devis
+                  En savoir plus
                   <Arrow className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                 </span>
-              </a>
+              </Link>
             </li>
           );
         })}

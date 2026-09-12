@@ -123,6 +123,18 @@ export function QuoteForm() {
             <label className={label} htmlFor="km">Kilométrage</label>
             <input id="km" name="km" inputMode="numeric" className={field} placeholder="24 000" />
           </div>
+          <div className="sm:col-span-2">
+            <label className={label} htmlFor="immat">
+              Immatriculation <span className="font-normal text-bone/35">(facultatif, mais ça nous fait gagner du temps)</span>
+            </label>
+            <input
+              id="immat"
+              name="immat"
+              className={`${field} uppercase placeholder:normal-case`}
+              placeholder="AB-123-CD"
+              autoComplete="off"
+            />
+          </div>
         </div>
 
         <div className="mt-4">

@@ -29,9 +29,9 @@ export function Footer() {
           <ul className="space-y-2">
             {services.map((s) => (
               <li key={s.slug}>
-                <a href="#prestations" className="text-sm text-bone/60 hover:text-bone">
+                <Link href={`/prestations/${s.slug}`} className="text-sm text-bone/60 hover:text-bone">
                   {s.title}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -46,9 +46,9 @@ export function Footer() {
               {site.address.zip} {site.address.city}
             </li>
             <li>
-              <a href="#infos" className="hover:text-bone">
+              <Link href="/#infos" className="hover:text-bone">
                 Horaires &amp; accès
-              </a>
+              </Link>
             </li>
             <li>
               <Link href="/mentions-legales" className="hover:text-bone">
