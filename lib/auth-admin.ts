@@ -15,6 +15,20 @@ import { redirect } from "next/navigation";
 const COOKIE = "atelier_session";
 const DUREE_HEURES = 12;
 
+/**
+ * Longueur minimale du secret de signature.
+ *
+ * Un secret court est un secret devinable, et un secret devinable rend la
+ * signature décorative : qui peut le retrouver fabrique un cookie valide et
+ * entre sans mot de passe.
+ *
+ * Ce seuil sert aussi de garde-fou contre l'erreur humaine — une phrase
+ * recopiée, un texte d'exemple, une commande collée à la place de son
+ * résultat. Trente-deux caractères, c'est plus long que toutes ces
+ * maladresses et beaucoup moins qu'une vraie valeur tirée au hasard.
+ */
+const LONGUEUR_MINIMALE_SECRET = 32;
+
 function encodeur() {
   return new TextEncoder();
 }
@@ -56,18 +70,37 @@ function configuration() {
   };
 }
 
+/**
+ * Un secret trop court n'est pas une configuration incomplète : c'est une
+ * configuration dangereuse. On refuse donc d'ouvrir la moindre session plutôt
+ * que d'en protéger une avec une signature qui ne protège rien.
+ */
+function secretUtilisable(secret: string | undefined): boolean {
+  return typeof secret === "string" && secret.length >= LONGUEUR_MINIMALE_SECRET;
+}
+
 export function administrationConfiguree(): boolean {
   const { motDePasse, secret } = configuration();
-  return Boolean(motDePasse && secret);
+  return Boolean(motDePasse) && secretUtilisable(secret);
 }
 
 export type RésultatConnexion =
   | { ok: true }
-  | { ok: false; raison: "non-configure" | "mauvais-mot-de-passe" };
+  | { ok: false; raison: "non-configure" | "secret-faible" | "mauvais-mot-de-passe" };
 
 export async function ouvrirSession(saisie: string): Promise<RésultatConnexion> {
   const { motDePasse, secret } = configuration();
   if (!motDePasse || !secret) return { ok: false, raison: "non-configure" };
+
+  if (!secretUtilisable(secret)) {
+    // La longueur réelle reste dans les journaux du serveur : l'afficher à un
+    // visiteur non authentifié renseignerait un attaquant sans aider personne.
+    console.error(
+      `ADMIN_SECRET fait ${secret.length} caractères, il en faut au moins ` +
+        `${LONGUEUR_MINIMALE_SECRET}. Aucune session ne sera ouverte.`,
+    );
+    return { ok: false, raison: "secret-faible" };
+  }
 
   // Les deux valeurs sont d'abord réduites à une empreinte de longueur fixe :
   // sans cela, la comparaison à durée constante trahirait la longueur du
@@ -99,7 +132,9 @@ export async function fermerSession() {
 
 export async function sessionValide(): Promise<boolean> {
   const { secret } = configuration();
-  if (!secret) return false;
+  // Même garde à la vérification qu'à l'ouverture : si le secret est
+  // raccourci après coup, les sessions déjà ouvertes cessent d'être valides.
+  if (!secret || !secretUtilisable(secret)) return false;
 
   const jeton = (await cookies()).get(COOKIE)?.value;
   if (!jeton) return false;

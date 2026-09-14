@@ -117,12 +117,31 @@ Elles ne se configurent pas toutes de la même façon, et l'erreur coûte cher.
 **Les deux variables de l'espace atelier.** `ADMIN_MOT_DE_PASSE` est ce que
 l'atelier tape pour entrer. `ADMIN_SECRET` ne se tape jamais : c'est la clé
 avec laquelle le serveur signe le cookie de session. Sans elle, n'importe qui
-pourrait fabriquer un cookie valide et entrer sans mot de passe. Elle se
-génère au hasard, se colle dans Netlify, et s'oublie :
+pourrait fabriquer un cookie valide et entrer sans mot de passe.
+
+**Générer `ADMIN_SECRET`.** Ce n'est pas une phrase à inventer, c'est une
+valeur tirée au hasard. Ouvre un terminal, exécute la commande ci-dessous, et
+colle dans Netlify **la ligne qu'elle affiche en réponse** — surtout pas la
+commande elle-même :
 
 ```bash
 openssl rand -base64 48
 ```
+
+Le terminal répond alors par une longue suite de lettres, de chiffres et de
+symboles, sur une seule ligne. C'est *cette* ligne qui va dans Netlify.
+
+Sans terminal sous la main, la console du navigateur fait aussi bien : F12,
+onglet *Console*, puis
+
+```js
+crypto.randomUUID() + crypto.randomUUID()
+```
+
+Le code refuse tout `ADMIN_SECRET` de moins de 32 caractères : il n'ouvre
+aucune session et l'écrit noir sur blanc sur la page de connexion. Une
+signature faite avec un secret devinable ne protège rien, et vaut moins que
+pas de signature du tout, parce qu'elle donne l'illusion d'une protection.
 
 Changer `ADMIN_SECRET` déconnecte tout le monde immédiatement — c'est le geste
 à faire si un doute apparaît, sans avoir à changer le mot de passe de
@@ -256,6 +275,38 @@ droite de chaque valeur — ou recadrer.
 **Si un secret a fuité :** le révoquer d'abord, en créer un nouveau ensuite.
 Dans cet ordre. Une clé révoquée est inoffensive ; une clé « qu'on pense que
 personne n'a vue » ne l'est pas.
+
+---
+
+## Quand le scanner arrête une construction
+
+Deux causes très différentes, et le remède n'est pas le même.
+
+**1. La valeur se retrouve dans un fichier produit par la construction**
+(chemin en `.next/cache/...`, `.netlify/...`). C'est le cas du cache de
+Turbopack, traité plus haut : portée *Functions* uniquement, et exemption de
+chemin limitée aux caches.
+
+**2. La valeur se retrouve dans un fichier du dépôt** (`docs/...`, un fichier
+source, un README) :
+
+```
+Secret env var "ADMIN_SECRET"'s value detected:
+  found value at line 124 in docs/NETLIFY.md
+```
+
+Là, **il n'y a rien à exempter.** Le scanner a raison : la valeur saisie chez
+Netlify existe aussi en clair dans un dépôt. Deux possibilités, et une seule
+est un vrai incident :
+
+- la valeur est un **texte d'exemple de la documentation** (une commande, un
+  gabarit, un `changeme`) — elle n'a jamais été secrète, donc elle ne protège
+  rien. Il faut en générer une vraie.
+- la valeur est un **vrai secret qui a été écrit dans le dépôt** — il est
+  compromis. Le révoquer, en créer un autre, retirer la ligne.
+
+Dans les deux cas le remède est le même : **changer la valeur**, jamais
+désactiver le scanner. C'est exactement le moment où il sert à quelque chose.
 
 ---
 

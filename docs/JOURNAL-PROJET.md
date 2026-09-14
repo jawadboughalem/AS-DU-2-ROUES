@@ -149,6 +149,26 @@ une recette suffirait à les altérer. Le magasin est donc nommé d'après
 magasin est effacé avec son déploiement. Des demandes clients ne peuvent pas
 disparaître au redéploiement suivant.
 
+### D13 — Le code refuse un secret de signature trop court
+Une construction Netlify a échoué : le scanner de secrets avait retrouvé la
+valeur d'`ADMIN_SECRET` dans `docs/NETLIFY.md`. La doc proposait
+`openssl rand -base64 48` dans un bloc de code ; la commande a été collée dans
+Netlify à la place de son résultat. Le secret de signature valait donc une
+chaîne publiquement lisible dans le dépôt — de quoi fabriquer un cookie de
+session valide et entrer sans mot de passe.
+
+Deux corrections, parce qu'une seule aurait laissé le piège intact :
+
+1. **La doc** distingue désormais la commande de sa réponse, et donne une
+   solution de repli sans terminal.
+2. **Le code** refuse tout `ADMIN_SECRET` de moins de 32 caractères : aucune
+   session ouverte, aucune session validée, et un message explicite sur la page
+   de connexion. La longueur réelle reste dans les journaux du serveur — la
+   donner à un visiteur non authentifié ne renseignerait que lui.
+
+À retenir : le scanner n'a pas trouvé une fuite, il a trouvé une *absence* de
+secret. C'est le même signal, et il méritait le même arrêt.
+
 ---
 
 ## Ce qui reste à obtenir du client
@@ -223,3 +243,6 @@ disparaître au redéploiement suivant.
   déconnexion
 - Magasin isolé par contexte de déploiement (D12) : un aperçu ne peut plus
   écrire dans les demandes de production
+- Construction en échec sur le scanner de secrets : `ADMIN_SECRET` valait la
+  commande de génération au lieu de son résultat. Doc clarifiée et garde-fou
+  posé dans le code (D13)

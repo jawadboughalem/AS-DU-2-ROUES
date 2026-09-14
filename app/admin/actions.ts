@@ -20,9 +20,14 @@ export async function seConnecter(_état: string | null, données: FormData) {
 
   if (résultat.ok) redirect("/admin");
 
-  return résultat.raison === "non-configure"
-    ? "L'espace n'est pas encore configuré. Les variables ADMIN_MOT_DE_PASSE et ADMIN_SECRET sont manquantes."
-    : "Mot de passe incorrect.";
+  const MESSAGES: Record<string, string> = {
+    "non-configure":
+      "L'espace n'est pas encore configuré. Les variables ADMIN_MOT_DE_PASSE et ADMIN_SECRET sont manquantes.",
+    "secret-faible":
+      "L'espace est mal configuré : ADMIN_SECRET doit contenir au moins 32 caractères tirés au hasard. Par sécurité, aucune connexion n'est possible.",
+    "mauvais-mot-de-passe": "Mot de passe incorrect.",
+  };
+  return MESSAGES[résultat.raison];
 }
 
 export async function seDeconnecter() {
