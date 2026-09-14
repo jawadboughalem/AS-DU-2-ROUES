@@ -13,8 +13,19 @@ import { site } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
-const DESTINATAIRE = process.env.CONTACT_TO ?? site.email;
-const EXPÉDITEUR = process.env.CONTACT_FROM ?? "onboarding@resend.dev";
+/**
+ * Les variables sont lues à chaque requête, et non au chargement du module.
+ * Cela garantit qu'aucune valeur ne peut être capturée au moment de la
+ * construction, et qu'une correction de configuration prend effet sans
+ * reconstruire le site.
+ */
+function configuration() {
+  return {
+    clé: process.env.RESEND_API_KEY,
+    destinataire: process.env.CONTACT_TO ?? site.email,
+    expéditeur: process.env.CONTACT_FROM ?? "onboarding@resend.dev",
+  };
+}
 
 function réponse(statut: number, corps: Record<string, unknown>) {
   return Response.json(corps, { status: statut });
@@ -45,7 +56,7 @@ export async function POST(request: Request) {
     return réponse(200, { ok: true });
   }
 
-  const clé = process.env.RESEND_API_KEY;
+  const { clé, destinataire, expéditeur } = configuration();
   if (!clé) {
     console.error(
       "RESEND_API_KEY absente : la demande n'a pas pu être transmise à l'atelier.",
@@ -60,8 +71,8 @@ export async function POST(request: Request) {
   const atelier = emailAtelier(demande);
 
   const envoiAtelier = await resend.emails.send({
-    from: `${site.name} <${EXPÉDITEUR}>`,
-    to: [DESTINATAIRE],
+    from: `${site.name} <${expéditeur}>`,
+    to: [destinataire],
     replyTo: demande.email || undefined,
     subject: atelier.objet,
     html: atelier.html,
@@ -78,7 +89,7 @@ export async function POST(request: Request) {
   if (demande.email) {
     const accusé = emailClient(demande);
     const envoiClient = await resend.emails.send({
-      from: `${site.name} <${EXPÉDITEUR}>`,
+      from: `${site.name} <${expéditeur}>`,
       to: [demande.email],
       subject: accusé.objet,
       html: accusé.html,

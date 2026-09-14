@@ -107,14 +107,42 @@ Les trois ne se configurent pas de la même façon, et l'erreur coûte cher.
 
 | Variable | Secret ? | Portée (Scopes) | Valeur |
 |---|---|---|---|
-| `RESEND_API_KEY` | **Oui** — cocher *Contains secret values* | **Runtime** | La clé Resend |
-| `CONTACT_TO` | Non | Runtime | L'adresse qui reçoit les demandes |
+| `RESEND_API_KEY` | **Oui** — cocher *Contains secret values* | **Functions, et rien d'autre** | La clé Resend |
+| `CONTACT_TO` | Non | Functions | L'adresse qui reçoit les demandes |
 | `NEXT_PUBLIC_SITE_URL` | **Non, jamais** | **Builds** | L'adresse publique du site |
 
-**Pourquoi `Runtime` pour la clé.** La route qui envoie les e-mails s'exécute
-à chaque visite, pas au moment de la construction. Sans la portée *Runtime*,
-la variable existe pendant le build et disparaît ensuite : le formulaire
-répond 503 sans qu'on comprenne pourquoi.
+**Pourquoi `Functions` pour la clé.** Sur Netlify, Next.js est servi par une
+fonction serverless — on la voit passer dans le journal de construction sous
+le nom `___netlify-server-handler`. C'est elle qui exécute la route d'envoi
+d'e-mails, à chaque requête. La portée qui la concerne s'appelle donc
+*Functions*, et non *Runtime*, qui vise les fonctions edge et les formulaires
+Netlify.
+
+**Et surtout : ne pas cocher `Builds` pour un secret.** Le scanner de secrets
+de Netlify fait échouer la construction s'il retrouve la valeur d'une variable
+marquée secrète dans les fichiers produits :
+
+```
+Secret env var "RESEND_API_KEY"'s value detected:
+  found value at line 12289 in .netlify/.next/cache/turbopack/...
+Build failed due to a user error
+```
+
+Ce n'est pas un faux positif. Avec la portée *Builds*, la variable est
+présente pendant la construction, et le cache de Turbopack en conserve une
+copie. Le secret se retrouve donc écrit sur disque, dans un cache que Netlify
+restaure d'une construction à l'autre.
+
+La tentation est d'ajouter `SECRETS_SCAN_OMIT_PATHS` ou de désactiver le
+scanner — Netlify le suggère lui-même dans le message d'erreur. **C'est la
+mauvaise réponse** : elle supprime l'alerte sans supprimer la fuite. La bonne
+réponse est de retirer la portée *Builds*, que cette clé n'a jamais eu besoin
+d'avoir.
+
+**Après correction, il faut vider le cache.** La construction fautive a été
+sauvegardée : *Deploys → Trigger deploy → **Clear cache and deploy site***.
+Un simple redéploiement restaurerait le cache empoisonné et échouerait
+à nouveau.
 
 **Pourquoi `Builds` pour l'URL.** Tout ce qui commence par `NEXT_PUBLIC_` est
 inscrit en dur dans le code envoyé au navigateur, au moment de la
