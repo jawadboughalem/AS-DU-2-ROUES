@@ -123,11 +123,33 @@ publique par nature.** Ne jamais y mettre un secret — la cocher *Contains
 secret values* ne changerait rien, elle finirait quand même dans le code
 source visible par tous.
 
-**Contextes de déploiement.** *Same value for all deploy contexts* suffit et
-simplifie tout. L'alternative — une valeur par contexte — a un intérêt réel :
-ne pas donner la clé d'envoi aux branches de préproduction, pour qu'un test
-n'envoie jamais un vrai e-mail. À adopter le jour où plusieurs personnes
-travaillent sur le site ; inutile avant.
+**Contextes de déploiement : le choix ne se pose pas pour un secret.**
+
+Dès que *Contains secret values* est coché, Netlify **impose** des portées
+explicites et **une valeur explicite par contexte** : l'option *Same value for
+all deploy contexts* devient inaccessible. Ce n'est pas un défaut de l'offre
+gratuite, c'est une règle de sécurité — elle empêche qu'un secret de
+production se retrouve appliqué partout d'un seul geste, y compris dans des
+environnements de test.
+
+Pour la clé Resend, remplir ainsi :
+
+| Contexte | Valeur |
+|---|---|
+| Production | la clé |
+| Deploy Previews | la clé — sinon les liens de validation envoyés au client ont un formulaire cassé |
+| Branch deploys | la clé |
+| Preview Server & Agent Runners | vide |
+| **Local development (Netlify CLI)** | **vide** |
+
+La dernière ligne compte. L'interface l'écrit elle-même sous le champ : cette
+valeur *« is available to the CLI, and is not considered secret »*. Y coller
+la vraie clé annule une partie de la protection qu'on vient d'activer. En
+développement local, la clé vit dans `.env.local`, qui est ignoré par Git.
+
+Les deux variables non secrètes — `CONTACT_TO` et `NEXT_PUBLIC_SITE_URL` —
+n'ont pas cette contrainte : *Same value for all deploy contexts* leur va très
+bien.
 
 **Après chaque ajout ou modification :** *Deploys → Trigger deploy → Clear
 cache and deploy site*. Une variable n'est pas appliquée rétroactivement au
