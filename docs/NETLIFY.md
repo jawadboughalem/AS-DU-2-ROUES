@@ -133,11 +133,36 @@ présente pendant la construction, et le cache de Turbopack en conserve une
 copie. Le secret se retrouve donc écrit sur disque, dans un cache que Netlify
 restaure d'une construction à l'autre.
 
-La tentation est d'ajouter `SECRETS_SCAN_OMIT_PATHS` ou de désactiver le
-scanner — Netlify le suggère lui-même dans le message d'erreur. **C'est la
-mauvaise réponse** : elle supprime l'alerte sans supprimer la fuite. La bonne
-réponse est de retirer la portée *Builds*, que cette clé n'a jamais eu besoin
-d'avoir.
+**La bonne réponse serait de retirer la portée `Builds`**, que cette clé n'a
+jamais eu besoin d'avoir. Sur l'offre gratuite, ce n'est pas possible :
+restreindre les portées est une fonction payante, l'interface affiche
+*Upgrade to unlock* et les cases restent grisées.
+
+À défaut, on exempte le cache du scanner, dans `netlify.toml` :
+
+```toml
+SECRETS_SCAN_OMIT_PATHS = ".netlify/.next/cache/**,.next/cache/**"
+```
+
+**La distinction qui compte.** Trois réglages existent, et ils ne se valent
+pas du tout :
+
+| Réglage | Effet | Verdict |
+|---|---|---|
+| `SECRETS_SCAN_ENABLED=false` | Éteint le contrôle entièrement | ❌ jamais |
+| `SECRETS_SCAN_OMIT_KEYS` | Cesse de chercher **cette clé**, partout | ❌ jamais |
+| `SECRETS_SCAN_OMIT_PATHS` sur le cache | Cesse de scanner **un répertoire non publié** | ✅ ciblé |
+
+Les deux premiers aveuglent le contrôle. Le troisième le concentre là où il
+sert : le cache de construction n'est pas servi aux visiteurs, alors que tout
+ce qui part réellement en ligne continue d'être scanné. C'est la réponse que
+la documentation de Netlify prévoit pour ce cas précis.
+
+**Pourquoi dans `netlify.toml` et pas dans l'interface.** Une exemption de
+sécurité doit être lisible, versionnée et justifiée. Dans un fichier, elle
+porte un commentaire qui explique pourquoi elle existe et quand la retirer ;
+dans l'interface, c'est une case cochée que personne ne saura expliquer dans
+six mois.
 
 **Après correction, il faut vider le cache.** La construction fautive a été
 sauvegardée : *Deploys → Trigger deploy → **Clear cache and deploy site***.

@@ -6,6 +6,27 @@
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
 
+  # Exemption ciblée du scanner de secrets, limitée au cache de construction.
+  #
+  # Restreindre la portée d'une variable d'environnement est une fonction
+  # payante chez Netlify. Sur l'offre gratuite, toute variable est donc
+  # présente pendant la construction, y compris la clé d'API — et le cache de
+  # Turbopack en conserve une copie, ce que le scanner signale à juste titre.
+  #
+  # Ce qui est exempté est un CHEMIN, jamais une clé : les répertoires de
+  # cache, qui ne sont pas publiés et ne sont donc jamais servis à un
+  # visiteur. Tout ce qui part réellement en ligne continue d'être scanné,
+  # et c'est là qu'une fuite compterait.
+  #
+  # Ne jamais remplacer ceci par SECRETS_SCAN_ENABLED=false ni par
+  # SECRETS_SCAN_OMIT_KEYS : ces deux réglages aveuglent le contrôle au lieu
+  # de le cibler.
+  #
+  # À supprimer le jour où le compte permet de restreindre la clé à la seule
+  # portée Functions : la cause disparaîtra, l'exemption n'aura plus lieu
+  # d'être.
+  SECRETS_SCAN_OMIT_PATHS = ".netlify/.next/cache/**,.next/cache/**"
+
 # Le plugin officiel gère le rendu Next.js : pages statiques, routes serveur et
 # optimisation des images. Netlify le détecte seul, mais on le déclare pour que
 # le comportement soit explicite et reproductible.
