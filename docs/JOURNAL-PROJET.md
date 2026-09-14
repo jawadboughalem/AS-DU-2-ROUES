@@ -169,6 +169,34 @@ Deux corrections, parce qu'une seule aurait laissé le piège intact :
 À retenir : le scanner n'a pas trouvé une fuite, il a trouvé une *absence* de
 secret. C'est le même signal, et il méritait le même arrêt.
 
+### D14 — Le créneau confirmé est stocké sous forme exploitable
+La première version de l'espace ne conservait du rendez-vous confirmé que sa
+phrase française : « Jeudi 24 septembre 2026, le matin, entre 10h et 13h ».
+Elle se lit très bien et ne se trie pas. Impossible d'en tirer une vue semaine,
+un comptage, ou un rappel la veille.
+
+Le jour et le créneau sont donc stockés séparément, et la phrase reste à côté —
+non par redondance, mais parce qu'elle est la trace de ce qui a été *promis* au
+client dans son e-mail. Si la formulation évolue, l'historique doit continuer
+de dire ce qui a réellement été écrit.
+
+### D15 — La vue semaine sert surtout au moment de confirmer
+Un planning qu'on consulte est utile ; un planning qui intervient au moment de
+la décision change le travail. L'indication de charge a donc été placée dans la
+fiche, juste au-dessus du bouton de confirmation : « déjà 2 le matin et 0
+l'après-midi ». C'est là que l'information évite l'erreur, pas dans un onglet
+qu'il faudrait penser à ouvrir avant.
+
+Trois règles de fond pour cette vue :
+- **Aucune donnée invisible.** Les jours fermés ne sont masqués que s'ils sont
+  vides. Un rendez-vous pris en exception un lundi reste affiché, signalé comme
+  tel.
+- **Le dimanche, on regarde devant.** La semaine « en cours » d'un dimanche est
+  celle qui se termine : la page s'ouvrirait sur cinq jours passés au moment
+  précis où l'on prépare les cinq suivants.
+- **L'heure est celle de Paris, pas celle du serveur.** Netlify exécute ses
+  fonctions en UTC ; un samedi 23h30 à Paris, le serveur est déjà dimanche.
+
 ---
 
 ## Ce qui reste à obtenir du client
@@ -191,7 +219,7 @@ secret. C'est le même signal, et il méritait le même arrêt.
    fait (Netlify Blobs, pas Supabase : voir D10)
 3. Saisir `ADMIN_MOT_DE_PASSE` et `ADMIN_SECRET` chez Netlify, puis vérifier
    qu'une vraie demande apparaît bien dans `/admin` en ligne
-4. Vue semaine des rendez-vous confirmés (promise dans l'offre 2)
+4. ~~Vue semaine des rendez-vous confirmés~~ — fait
 5. Renommer le site Netlify en `as-du-2-roues` et mettre à jour
    `NEXT_PUBLIC_SITE_URL`
 6. Page « L'atelier » (à propos), une fois les photos prises
@@ -246,3 +274,16 @@ secret. C'est le même signal, et il méritait le même arrêt.
 - Construction en échec sur le scanner de secrets : `ADMIN_SECRET` valait la
   commande de génération au lieu de son résultat. Doc clarifiée et garde-fou
   posé dans le code (D13)
+
+### 14 septembre 2026 (suite)
+- Construction en échec sur un 500 interne de Netlify, à l'étape de
+  téléversement : relancée, passée. Rien de notre côté.
+- Vue semaine livrée : mardi – samedi, matin et après-midi, navigation d'une
+  semaine à l'autre, demandes en attente signalées par jour
+- Créneau confirmé stocké sous forme exploitable (D14), indication de charge
+  au moment de confirmer (D15)
+- Arithmétique des dates isolée et vérifiée sur ses cas limites : changement
+  d'heure d'octobre, passage d'année, jour parisien contre jour serveur
+- Deux défauts levés par la recette étendue : un sélecteur devenu ambigu (le
+  nouvel onglet est lui aussi un lien vers /admin/…) et, derrière, une vraie
+  absence — ni la liste ni la semaine ne portaient de titre de niveau 1

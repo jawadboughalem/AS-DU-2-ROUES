@@ -419,13 +419,13 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
       ? ok("Bon mot de passe : session ouverte")
       : fail("La connexion échoue avec le bon mot de passe");
 
-    const cartes = await p.locator('a[href^="/admin/"]').count();
+    const cartes = await p.locator('a[data-demande]').count();
     cartes > 0
       ? ok(`${cartes} demande(s) listée(s) dans l'espace`)
       : warn("Aucune demande à lister — envoyez-en une avant de recetter");
 
     if (cartes > 0) {
-      await p.locator('a[href^="/admin/"]').first().click();
+      await p.locator('a[data-demande]').first().click();
       await p.waitForTimeout(900);
       const titre = await p.locator("h1").count();
       const rappel = await p.locator('a[href^="tel:"]').count();
@@ -433,6 +433,65 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
         ? ok("Fiche détaillée : un titre, un bouton de rappel")
         : fail("La fiche détaillée est incomplète");
     }
+
+    // ---------- Vue semaine ----------
+    await p.goto(`${base}/admin/semaine`, { waitUntil: "networkidle" });
+    const jours = await p.locator("[data-jour]").count();
+    jours >= 5
+      ? ok(`Vue semaine : ${jours} jour(s) affiché(s)`)
+      : fail(`Vue semaine : ${jours} jour(s) affiché(s), l'atelier en ouvre 5`);
+
+    // L'atelier est fermé le lundi et le dimanche : ces colonnes ne
+    // s'affichent que si elles portent un rendez-vous.
+    const codesJours = await p
+      .locator("[data-jour]")
+      .evaluateAll((n) => n.map((e) => e.getAttribute("data-jour")));
+    const vides = codesJours.filter((j) => {
+      const indice = (new Date(`${j}T12:00:00Z`).getUTCDay() + 6) % 7;
+      return indice === 0 || indice === 6;
+    });
+    for (const jour of vides) {
+      const contenu = await p.locator(`[data-jour="${jour}"] a[data-demande]`).count();
+      const attente = await p.locator(`[data-jour="${jour}"]`).getByText("en attente").count();
+      if (contenu === 0 && attente === 0) fail(`Jour fermé ${jour} affiché sans rien dedans`);
+    }
+
+    const semaineAffichée = await p.locator("main").innerText();
+    await p.click('[aria-label="Semaine suivante"]');
+    await p.waitForTimeout(900);
+    const aprèsClic = await p.locator("main").innerText();
+    aprèsClic !== semaineAffichée && new URL(p.url()).searchParams.has("debut")
+      ? ok("Vue semaine : la navigation change bien de semaine")
+      : fail("Vue semaine : le bouton « semaine suivante » ne change rien");
+
+    (await p.locator("text=Revenir à cette semaine").count()) === 1
+      ? ok("Vue semaine : le retour à la semaine courante est proposé")
+      : fail("Vue semaine : aucun moyen de revenir à la semaine courante");
+
+    for (const largeur of [320, 390, 1280]) {
+      await p.setViewportSize({ width: largeur, height: 900 });
+      await p.waitForTimeout(250);
+      const m = await p.evaluate(() => ({
+        c: document.documentElement.clientWidth,
+        s: document.documentElement.scrollWidth,
+      }));
+      if (m.s > m.c + 1) fail(`Vue semaine : débordement de ${m.s - m.c}px à ${largeur}px`);
+    }
+    ok("Vue semaine : aucun débordement de 320 à 1280px");
+    await p.setViewportSize({ width: 390, height: 844 });
+
+    // Un titre de niveau 1 par page, ici comme sur le site public. L'oubli
+    // est passé inaperçu à la livraison : l'en-tête ressemble à un titre sans
+    // en être un.
+    for (const [chemin, nom] of [
+      ["/admin", "liste"],
+      ["/admin/semaine", "semaine"],
+    ]) {
+      await p.goto(`${base}${chemin}`, { waitUntil: "networkidle" });
+      const n = await p.locator("h1").count();
+      if (n !== 1) fail(`Espace ${nom} : ${n} titre(s) h1, il en faut exactement un`);
+    }
+    ok("Chaque page de l'espace porte un titre de niveau 1");
 
     // La déconnexion doit réellement fermer l'accès, pas seulement l'interface.
     await p.goto(`${base}/admin`, { waitUntil: "networkidle" });

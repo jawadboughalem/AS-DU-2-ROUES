@@ -69,6 +69,33 @@ Rien ne se supprime jamais. Une demande rangée reste consultable dans
 
 ---
 
+## La semaine
+
+Le second onglet, en haut : **Semaine**. C'est votre planning.
+
+Du **mardi au samedi**, matin et après-midi, avec pour chaque demi-journée soit
+les rendez-vous confirmés, soit la mention **Libre**. Le jour du jour est
+encadré en rouge. Les flèches passent d'une semaine à l'autre, et un lien
+ramène à la semaine en cours dès que vous vous en éloignez.
+
+Trois détails qui comptent :
+
+- **Un jour marqué « 1 en attente »** contient une demande de rendez-vous que
+  vous n'avez pas encore confirmée. C'est un rappel, pas une alerte.
+- **Un rendez-vous pris un lundi ou un dimanche** — une exception, un dépannage
+  — apparaît quand même, avec la mention *Normalement fermé*. Rien ne se cache.
+- **Dans une demi-journée, l'ordre est celui des demandes reçues.** Premier
+  demandé, premier affiché.
+
+Le dimanche, la page s'ouvre directement sur la semaine qui arrive : c'est le
+jour où on la prépare, pas celui où on relit la précédente.
+
+**Et surtout :** au moment de confirmer un créneau depuis une fiche, une ligne
+vous dit ce qui est déjà pris ce jour-là — *« Jeudi 17 septembre 2026 — déjà 2
+le matin et 0 l'après-midi. »* Vous ne validez plus à l'aveugle.
+
+---
+
 ## Le mot de passe
 
 Il vaut l'accès aux coordonnées de vos clients : traitez-le comme la clé de

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Resend } from "resend";
 import { exigerSession, fermerSession, ouvrirSession } from "@/lib/auth-admin";
 import { demandesStore, type Statut } from "@/lib/demandes-store";
+import { estCléCréneau, phraseCréneau } from "@/lib/creneaux";
 import { emailConfirmation } from "@/lib/email-templates";
 import { site } from "@/lib/site";
 
@@ -35,35 +36,23 @@ export async function seDeconnecter() {
   redirect("/admin/connexion");
 }
 
-const CRÉNEAUX: Record<string, string> = {
-  matin: "le matin, entre 10h et 13h",
-  apresmidi: "l'après-midi, entre 14h et 19h",
-  indifferent: "dans la journée",
-};
-
-function phraseCréneau(date: string, créneau: string): string {
-  const jour = new Date(`${date}T12:00:00`);
-  const formaté = new Intl.DateTimeFormat("fr-FR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(jour);
-  const début = formaté.charAt(0).toUpperCase() + formaté.slice(1);
-  return `${début}, ${CRÉNEAUX[créneau] ?? CRÉNEAUX.indifferent}`;
-}
-
 export async function confirmerRendezVous(données: FormData) {
   await exigerSession();
 
   const id = String(données.get("id") ?? "");
   const date = String(données.get("date") ?? "");
-  const créneau = String(données.get("creneau") ?? "indifferent");
-  if (!id || !date) return;
+  const saisi = données.get("creneau");
+  const créneau = estCléCréneau(saisi) ? saisi : "indifferent";
+  // Une date de rendez-vous est un jour, pas un texte libre : le champ est de
+  // type date, mais une action est une URL et reçoit ce qu'on veut bien lui
+  // envoyer.
+  if (!id || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
 
   const phrase = phraseCréneau(date, créneau);
   const entrée = await demandesStore().modifier(id, {
     statut: "confirmee",
+    rdvDate: date,
+    rdvCreneau: créneau,
     creneauConfirme: phrase,
   });
   if (!entrée) return;
@@ -89,6 +78,7 @@ export async function confirmerRendezVous(données: FormData) {
   }
 
   revalidatePath("/admin");
+  revalidatePath("/admin/semaine");
   revalidatePath(`/admin/${id}`);
 }
 
@@ -102,5 +92,6 @@ export async function changerStatut(données: FormData) {
 
   await demandesStore().modifier(id, { statut });
   revalidatePath("/admin");
+  revalidatePath("/admin/semaine");
   revalidatePath(`/admin/${id}`);
 }

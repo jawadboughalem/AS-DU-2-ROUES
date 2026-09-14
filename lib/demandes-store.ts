@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { Demande } from "./demande";
+import type { CléCréneau } from "./creneaux";
 
 /**
  * Stockage des demandes.
@@ -28,14 +29,33 @@ export type DemandeEnregistree = {
   recueLe: string;
   majLe?: string;
   statut: Statut;
-  /** Renseigné quand l'atelier confirme un rendez-vous. */
+  /**
+   * Le créneau confirmé, sous forme exploitable : c'est ce qui permet de
+   * regrouper les rendez-vous par jour et par demi-journée.
+   *
+   * La première version ne conservait que la phrase française
+   * (`creneauConfirme`). Elle se lit très bien et ne se trie pas : impossible
+   * de construire quoi que ce soit — une vue semaine, un comptage, un rappel
+   * la veille — à partir de « Jeudi 24 septembre 2026, le matin ».
+   */
+  rdvDate?: string;
+  rdvCreneau?: CléCréneau;
+  /**
+   * La même chose en français. Conservée volontairement plutôt que recalculée
+   * à l'affichage : c'est la trace de ce qui a été *promis* au client dans son
+   * e-mail. Si la formulation évolue un jour, l'historique doit continuer de
+   * dire ce qui a réellement été écrit.
+   */
   creneauConfirme?: string;
   noteAtelier?: string;
   demande: DemandeConservee;
 };
 
 export type Modification = Partial<
-  Pick<DemandeEnregistree, "statut" | "creneauConfirme" | "noteAtelier">
+  Pick<
+    DemandeEnregistree,
+    "statut" | "rdvDate" | "rdvCreneau" | "creneauConfirme" | "noteAtelier"
+  >
 >;
 
 interface Store {
@@ -167,4 +187,13 @@ export function nouvelIdentifiant(): string {
 /** Tri décroissant par date de réception, quel que soit le magasin. */
 export function parPlusRecent(a: DemandeEnregistree, b: DemandeEnregistree) {
   return b.recueLe.localeCompare(a.recueLe);
+}
+
+/**
+ * Tri croissant. Dans une demi-journée, deux rendez-vous n'ont pas d'heure
+ * précise qui les départage : le seul ordre défendable est celui des
+ * arrivées — premier demandé, premier servi.
+ */
+export function parPlusAncien(a: DemandeEnregistree, b: DemandeEnregistree) {
+  return a.recueLe.localeCompare(b.recueLe);
 }

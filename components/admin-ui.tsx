@@ -24,10 +24,17 @@ export function Badge({ statut }: { statut: Statut }) {
   );
 }
 
-export function EnTeteAdmin({ titre }: { titre: string }) {
+const ONGLETS = [
+  { clé: "demandes", libellé: "Demandes", href: "/admin" },
+  { clé: "semaine", libellé: "Semaine", href: "/admin/semaine" },
+] as const;
+
+export type OngletAdmin = (typeof ONGLETS)[number]["clé"];
+
+export function EnTeteAdmin({ titre, onglet }: { titre: string; onglet?: OngletAdmin }) {
   return (
     <header className="border-b border-bone/10 bg-ink-2">
-      <div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-5 py-4">
+      <div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-5 pt-4">
         <div className="flex items-center gap-3">
           <LogoMark className="h-9 w-9" />
           <div className="leading-tight">
@@ -44,6 +51,29 @@ export function EnTeteAdmin({ titre }: { titre: string }) {
           </button>
         </form>
       </div>
+
+      <nav aria-label="Espace atelier" className="mx-auto max-w-3xl px-5">
+        <ul className="flex gap-1">
+          {ONGLETS.map((o) => {
+            const actif = onglet === o.clé;
+            return (
+              <li key={o.clé}>
+                <Link
+                  href={o.href}
+                  aria-current={actif ? "page" : undefined}
+                  className={`-mb-px inline-block border-b-2 px-3 py-3 text-sm font-semibold transition-colors ${
+                    actif
+                      ? "border-accent text-accent"
+                      : "border-transparent text-bone/45 hover:text-bone"
+                  }`}
+                >
+                  {o.libellé}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
     </header>
   );
 }
@@ -66,6 +96,7 @@ export function CarteDemande({ entrée }: { entrée: DemandeEnregistree }) {
     <li>
       <Link
         href={`/admin/${entrée.id}`}
+        data-demande={entrée.id}
         className="block rounded-2xl border border-bone/12 bg-ink-2 p-5 transition-colors hover:border-bone/30"
       >
         <div className="flex flex-wrap items-center gap-2.5">

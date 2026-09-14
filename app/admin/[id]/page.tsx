@@ -2,8 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { exigerSession } from "@/lib/auth-admin";
-import { demandesStore } from "@/lib/demandes-store";
+import { demandesStore, type DemandeEnregistree } from "@/lib/demandes-store";
 import { LIBELLES, libelléPrestation } from "@/lib/demande";
+import {
+  CRENEAUX,
+  CRENEAUX_OUVRES,
+  jourLisible,
+  lundiDeLaSemaine,
+  type CléCréneau,
+} from "@/lib/creneaux";
 import { Badge, EnTeteAdmin, dateLisible, metadonneesAdmin } from "@/components/admin-ui";
 import { Phone } from "@/components/icons";
 import { changerStatut, confirmerRendezVous } from "../actions";
@@ -43,6 +50,32 @@ export default async function FicheDemande({
   const d = entrée.demande;
   const rdv = d.mode === "rdv";
 
+  /**
+   * Charge déjà confirmée sur le jour demandé.
+   *
+   * C'est le moment où l'information sert : au moment de confirmer, pas après.
+   * Sans elle, l'atelier valide un créneau à l'aveugle et découvre trois
+   * scooters le même matin. Un échec de lecture ne doit pas empêcher de
+   * confirmer pour autant — l'indication disparaît, le formulaire reste.
+   */
+  const jourVisé = entrée.rdvDate ?? d.date;
+  let charge: Record<CléCréneau, number> | null = null;
+  if (rdv && jourVisé) {
+    try {
+      const toutes: DemandeEnregistree[] = await demandesStore().lister();
+      const même = toutes.filter(
+        (e) => e.id !== entrée.id && e.statut === "confirmee" && e.rdvDate === jourVisé,
+      );
+      charge = {
+        matin: même.filter((e) => e.rdvCreneau === "matin").length,
+        apresmidi: même.filter((e) => e.rdvCreneau === "apresmidi").length,
+        indifferent: même.filter((e) => (e.rdvCreneau ?? "indifferent") === "indifferent").length,
+      };
+    } catch (erreur) {
+      console.error("Charge du jour non calculée :", erreur);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-ink pb-20">
       <EnTeteAdmin titre="Demande" />
@@ -73,9 +106,19 @@ export default async function FicheDemande({
         </a>
 
         {entrée.creneauConfirme && (
-          <p className="mt-5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-400">
-            Confirmé : {entrée.creneauConfirme}
-          </p>
+          <div className="mt-5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3">
+            <p className="text-sm font-semibold text-emerald-400">
+              Confirmé : {entrée.creneauConfirme}
+            </p>
+            {entrée.rdvDate && (
+              <Link
+                href={`/admin/semaine?debut=${lundiDeLaSemaine(entrée.rdvDate)}`}
+                className="mt-1.5 inline-block text-xs font-semibold text-emerald-400/80 hover:underline"
+              >
+                Voir la semaine →
+              </Link>
+            )}
+          </div>
         )}
 
         <dl className="mt-7 rounded-2xl border border-bone/12 bg-ink-2 px-5">
@@ -114,6 +157,18 @@ export default async function FicheDemande({
                 : "Ce client n’a pas laissé d’e-mail : pensez à le prévenir par téléphone."}
             </p>
 
+            {charge && jourVisé && (
+              <p
+                data-charge={jourVisé}
+                className="mt-3 rounded-xl border border-bone/12 bg-ink px-4 py-3 text-sm leading-relaxed text-bone/60"
+              >
+                <span className="font-semibold text-bone/80">{jourLisible(jourVisé)}</span> —{" "}
+                {charge.matin + charge.apresmidi + charge.indifferent === 0
+                  ? "aucun autre rendez-vous confirmé ce jour-là."
+                  : `déjà ${charge.matin} le matin et ${charge.apresmidi} l’après-midi.`}
+              </p>
+            )}
+
             <form action={confirmerRendezVous} className="mt-4">
               <input type="hidden" name="id" value={entrée.id} />
               <div className="grid gap-3 sm:grid-cols-2">
@@ -126,7 +181,7 @@ export default async function FicheDemande({
                     name="date"
                     type="date"
                     required
-                    defaultValue={d.date || undefined}
+                    defaultValue={entrée.rdvDate || d.date || undefined}
                     className="w-full rounded-xl border border-bone/15 bg-ink px-4 py-3 text-sm text-bone focus:border-accent focus:outline-none"
                   />
                 </div>
@@ -137,12 +192,15 @@ export default async function FicheDemande({
                   <select
                     id="creneau"
                     name="creneau"
-                    defaultValue={d.creneau ?? "matin"}
+                    defaultValue={entrée.rdvCreneau ?? d.creneau ?? "matin"}
                     className="w-full rounded-xl border border-bone/15 bg-ink px-4 py-3 text-sm text-bone focus:border-accent focus:outline-none"
                   >
-                    <option value="matin">Matin (10h – 13h)</option>
-                    <option value="apresmidi">Après-midi (14h – 19h)</option>
-                    <option value="indifferent">Dans la journée</option>
+                    {[...CRENEAUX_OUVRES, "indifferent" as CléCréneau].map((clé) => (
+                      <option key={clé} value={clé}>
+                        {CRENEAUX[clé].court}
+                        {clé === "indifferent" ? "" : ` (${CRENEAUX[clé].horaire})`}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>

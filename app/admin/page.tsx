@@ -50,9 +50,14 @@ export default async function EspaceAtelier({
 
   return (
     <div className="min-h-screen bg-ink pb-16">
-      <EnTeteAdmin titre="Demandes" />
+      <EnTeteAdmin titre="Demandes" onglet="demandes" />
 
       <main className="mx-auto max-w-3xl px-5 py-6">
+        {/* Le titre de l'en-tête est répété sur chaque page : c'est du
+            mobilier. Le sujet de celle-ci, lui, mérite un h1, même si
+            l'afficher une seconde fois n'apporterait rien à l'œil. */}
+        <h1 className="sr-only">Demandes</h1>
+
         {panne && (
           <div
             role="alert"
