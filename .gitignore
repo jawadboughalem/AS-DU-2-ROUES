@@ -42,3 +42,6 @@ next-env.d.ts
 
 # variables d'environnement
 .env*.local
+
+# données locales de développement
+/.data

@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { demandeSchema } from "@/lib/demande";
 import { emailAtelier, emailClient } from "@/lib/email-templates";
+import { demandesStore, nouvelIdentifiant } from "@/lib/demandes-store";
 import { site } from "@/lib/site";
 
 /**
@@ -54,6 +55,23 @@ export async function POST(request: Request) {
   // Piège à robots : on répond comme si tout allait bien, sans rien envoyer.
   if (demande.societe) {
     return réponse(200, { ok: true });
+  }
+
+  // L'enregistrement vient AVANT l'envoi, délibérément. Si l'e-mail échoue —
+  // clé absente, service indisponible — la demande reste consultable dans
+  // l'espace de l'atelier au lieu d'être perdue. Son propre échec, lui, ne
+  // fait pas échouer la requête : mieux vaut un e-mail sans trace qu'aucun
+  // des deux.
+  try {
+    const { societe, ...conservée } = demande;
+    await demandesStore().enregistrer({
+      id: nouvelIdentifiant(),
+      recueLe: new Date().toISOString(),
+      statut: "nouvelle",
+      demande: conservée,
+    });
+  } catch (erreur) {
+    console.error("Demande non enregistrée :", erreur);
   }
 
   const { clé, destinataire, expéditeur } = configuration();
