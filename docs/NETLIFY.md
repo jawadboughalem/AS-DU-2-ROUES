@@ -100,6 +100,60 @@ permettra d'envoyer une version en validation sans toucher au site en ligne.
 
 ---
 
+## Les variables d'environnement, en détail
+
+Trois variables à créer dans *Site configuration → Environment variables*.
+Les trois ne se configurent pas de la même façon, et l'erreur coûte cher.
+
+| Variable | Secret ? | Portée (Scopes) | Valeur |
+|---|---|---|---|
+| `RESEND_API_KEY` | **Oui** — cocher *Contains secret values* | **Runtime** | La clé Resend |
+| `CONTACT_TO` | Non | Runtime | L'adresse qui reçoit les demandes |
+| `NEXT_PUBLIC_SITE_URL` | **Non, jamais** | **Builds** | L'adresse publique du site |
+
+**Pourquoi `Runtime` pour la clé.** La route qui envoie les e-mails s'exécute
+à chaque visite, pas au moment de la construction. Sans la portée *Runtime*,
+la variable existe pendant le build et disparaît ensuite : le formulaire
+répond 503 sans qu'on comprenne pourquoi.
+
+**Pourquoi `Builds` pour l'URL.** Tout ce qui commence par `NEXT_PUBLIC_` est
+inscrit en dur dans le code envoyé au navigateur, au moment de la
+construction. C'est le préfixe qui le dit : **une variable `NEXT_PUBLIC_` est
+publique par nature.** Ne jamais y mettre un secret — la cocher *Contains
+secret values* ne changerait rien, elle finirait quand même dans le code
+source visible par tous.
+
+**Contextes de déploiement.** *Same value for all deploy contexts* suffit et
+simplifie tout. L'alternative — une valeur par contexte — a un intérêt réel :
+ne pas donner la clé d'envoi aux branches de préproduction, pour qu'un test
+n'envoie jamais un vrai e-mail. À adopter le jour où plusieurs personnes
+travaillent sur le site ; inutile avant.
+
+**Après chaque ajout ou modification :** *Deploys → Trigger deploy → Clear
+cache and deploy site*. Une variable n'est pas appliquée rétroactivement au
+déploiement déjà en ligne.
+
+---
+
+## Les secrets ne se montrent pas
+
+Une règle, sans exception : **un secret ne sort jamais de l'endroit où il doit
+vivre.** Pas dans une conversation, pas dans un ticket, pas dans un mail, pas
+dans une capture d'écran.
+
+Une capture d'un écran de configuration est une fuite au même titre qu'un
+copier-coller : la valeur est lisible, et elle reste dans l'historique de
+l'outil où elle a transité.
+
+Avant toute capture, masquer le champ — Netlify propose une icône œil barré à
+droite de chaque valeur — ou recadrer.
+
+**Si un secret a fuité :** le révoquer d'abord, en créer un nouveau ensuite.
+Dans cet ordre. Une clé révoquée est inoffensive ; une clé « qu'on pense que
+personne n'a vue » ne l'est pas.
+
+---
+
 ## Ce que je fais dès que l'URL existe
 
 1. **Brancher l'envoi réel du formulaire** : une route serveur reçoit la
