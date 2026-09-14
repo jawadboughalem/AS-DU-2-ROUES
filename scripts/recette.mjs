@@ -386,6 +386,67 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
   }
 }
 
+// ---------- 12. Espace d'administration ----------
+// Nécessite ADMIN_MOT_DE_PASSE côté serveur et RECETTE_ADMIN_MDP ici.
+{
+  const mdp = process.env.RECETTE_ADMIN_MDP;
+  if (!mdp) {
+    warn("Espace d'administration non recetté (RECETTE_ADMIN_MDP absent)");
+  } else {
+    const base = new URL(BASE).origin;
+    const ctx = await browser.newContext({ ...L, viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+    const p = await ctx.newPage();
+
+    await p.goto(`${base}/admin`, { waitUntil: "networkidle" });
+    new URL(p.url()).pathname === "/admin/connexion"
+      ? ok("Sans session, l'espace redirige vers la connexion")
+      : fail(`Sans session, /admin reste accessible (${new URL(p.url()).pathname})`);
+
+    await p.fill("#motdepasse", "mauvais-mot-de-passe");
+    await p.click('button[type="submit"]');
+    await p.waitForTimeout(1200);
+    const refus = await p.locator('[data-erreur="connexion"]').isVisible().catch(() => false);
+    const resté = new URL(p.url()).pathname === "/admin/connexion";
+    refus && resté
+      ? ok("Mauvais mot de passe : refusé, avec un message")
+      : fail("Un mauvais mot de passe n'est pas correctement refusé");
+
+    await p.fill("#motdepasse", mdp);
+    await p.click('button[type="submit"]');
+    await p.waitForURL("**/admin**", { timeout: 15000 }).catch(() => {});
+    await p.waitForTimeout(800);
+    new URL(p.url()).pathname === "/admin"
+      ? ok("Bon mot de passe : session ouverte")
+      : fail("La connexion échoue avec le bon mot de passe");
+
+    const cartes = await p.locator('a[href^="/admin/"]').count();
+    cartes > 0
+      ? ok(`${cartes} demande(s) listée(s) dans l'espace`)
+      : warn("Aucune demande à lister — envoyez-en une avant de recetter");
+
+    if (cartes > 0) {
+      await p.locator('a[href^="/admin/"]').first().click();
+      await p.waitForTimeout(900);
+      const titre = await p.locator("h1").count();
+      const rappel = await p.locator('a[href^="tel:"]').count();
+      titre === 1 && rappel > 0
+        ? ok("Fiche détaillée : un titre, un bouton de rappel")
+        : fail("La fiche détaillée est incomplète");
+    }
+
+    // La déconnexion doit réellement fermer l'accès, pas seulement l'interface.
+    await p.goto(`${base}/admin`, { waitUntil: "networkidle" });
+    await p.click('button:has-text("Déconnexion")');
+    await p.waitForTimeout(1200);
+    await p.goto(`${base}/admin`, { waitUntil: "networkidle" });
+    new URL(p.url()).pathname === "/admin/connexion"
+      ? ok("Après déconnexion, l'espace est de nouveau fermé")
+      : fail("La déconnexion ne ferme pas réellement la session");
+
+    await ctx.close();
+  }
+}
+
 await browser.close();
 
 console.log("\n================ RECETTE ================\n");

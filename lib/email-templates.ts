@@ -154,3 +154,46 @@ export function emailClient(d: Demande) {
 
   return { objet, html: enveloppe(objet, contenu) };
 }
+
+
+/**
+ * Confirmation d'un rendez-vous, envoyée au client quand l'atelier valide le
+ * créneau depuis son espace. C'est le seul e-mail qui engage l'atelier : il
+ * dit « c'est fixé », là où tous les autres disent « on vous rappelle ».
+ */
+export function emailConfirmation(d: Demande, créneauConfirmé: string) {
+  const objet = `Rendez-vous confirmé — ${site.name}`;
+
+  const contenu = `
+    <p style="margin:0 0 4px;color:${ROUGE};font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase">
+      Rendez-vous confirmé
+    </p>
+    <h1 style="margin:0 0 16px;font-size:22px;color:${ENCRE};letter-spacing:-0.4px">Bonjour ${échapper(d.nom)},</h1>
+
+    <p style="margin:0 0 20px;color:${ENCRE};font-size:15px;line-height:1.65">
+      C'est noté pour votre ${échapper(d.vehicule.toLowerCase())}
+      ${échapper(`${d.marque} ${d.modele}`)}.
+    </p>
+
+    <p style="margin:0 0 22px;padding:16px;background:#fdeced;border-radius:10px;color:${ENCRE};font-size:17px;font-weight:700;line-height:1.5">
+      ${échapper(créneauConfirmé)}
+    </p>
+
+    <p style="margin:0 0 20px;color:${ENCRE};font-size:15px;line-height:1.65">
+      Rendez-vous au <strong>${site.address.street}, ${site.address.zip} ${site.address.city}</strong>.
+      Pensez à apporter votre carte grise.
+    </p>
+
+    <p style="margin:0 0 22px;padding:14px 16px;background:#f6f5f2;border-radius:10px;color:#6b6b6b;font-size:14px;line-height:1.6">
+      <strong style="color:${ENCRE}">Un empêchement ?</strong> Prévenez-nous au
+      <a href="${site.phoneHref}" style="color:${ROUGE};font-weight:700;text-decoration:none">${site.phone}</a>,
+      même au dernier moment. Un créneau libéré profite à quelqu'un d'autre.
+    </p>
+
+    <p style="margin:0;color:#6b6b6b;font-size:14px;line-height:1.65">
+      À bientôt,<br>
+      <strong style="color:${ENCRE}">L'équipe de ${site.name}</strong>
+    </p>`;
+
+  return { objet, html: enveloppe(objet, contenu) };
+}
