@@ -22,17 +22,21 @@ function échapper(valeur: string): string {
 
 function ligne(intitulé: string, valeur?: string | null) {
   if (!valeur) return "";
+  // Ni white-space:nowrap ni largeur fixe : sur un écran étroit, ils imposent
+  // une largeur plancher au tableau et forcent un défilement horizontal.
+  // word-break protège des valeurs longues et insécables, comme une adresse
+  // e-mail ou un modèle à rallonge.
   return `<tr>
-    <td style="padding:8px 14px;border-bottom:1px solid #eceae6;color:#6b6b6b;font-size:13px;white-space:nowrap">${intitulé}</td>
-    <td style="padding:8px 14px;border-bottom:1px solid #eceae6;color:${ENCRE};font-size:14px;font-weight:600">${échapper(valeur)}</td>
+    <td style="padding:8px 12px;border-bottom:1px solid #eceae6;color:#6b6b6b;font-size:13px;vertical-align:top;width:38%">${intitulé}</td>
+    <td style="padding:8px 12px;border-bottom:1px solid #eceae6;color:${ENCRE};font-size:14px;font-weight:600;word-break:break-word">${échapper(valeur)}</td>
   </tr>`;
 }
 
 function enveloppe(titre: string, contenu: string): string {
   return `<!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><title>${échapper(titre)}</title></head>
-<body style="margin:0;padding:24px;background:#f6f5f2;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto">
+<body style="margin:0;padding:16px;background:#f6f5f2;word-break:break-word;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px;margin:0 auto;table-layout:fixed">
     <tr><td style="background:${ENCRE};padding:20px 24px;border-radius:12px 12px 0 0">
       <span style="color:#fff;font-size:17px;font-weight:800;letter-spacing:-0.3px">${site.name}</span>
       <span style="color:rgba(255,255,255,.45);font-size:12px;display:block;margin-top:2px">${site.address.district}</span>
@@ -61,12 +65,12 @@ export function emailAtelier(d: Demande) {
 
     <p style="margin:0 0 20px">
       <a href="tel:${échapper(d.telephone.replace(/\s/g, ""))}"
-         style="display:inline-block;background:${ROUGE};color:#fff;text-decoration:none;padding:12px 22px;border-radius:999px;font-size:15px;font-weight:700">
+         style="display:inline-block;background:${ROUGE};color:#fff;text-decoration:none;padding:12px 20px;border-radius:999px;font-size:15px;font-weight:700;white-space:nowrap">
         Rappeler le ${échapper(d.telephone)}
       </a>
     </p>
 
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #eceae6;border-radius:10px;overflow:hidden">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;border:1px solid #eceae6;border-radius:10px;overflow:hidden">
       ${ligne("Véhicule", `${d.vehicule} · ${d.marque} ${d.modele}`)}
       ${ligne("Année", d.annee)}
       ${ligne("Kilométrage", d.km)}

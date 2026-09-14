@@ -351,6 +351,33 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
   await ctx.close();
 }
 
+// ---------- 11. Les e-mails, sur écran étroit ----------
+// L'e-mail reçu par l'atelier est un écran consulté plusieurs fois par jour,
+// sur un téléphone. Il est donc recetté comme une page.
+// Nécessite APERCU_EMAIL=1 côté serveur ; ignoré sinon.
+{
+  const base = new URL(BASE).origin;
+  const sonde = await fetch(`${base}/api/apercu-email`);
+  if (sonde.status === 404) {
+    warn("Aperçu des e-mails désactivé (APERCU_EMAIL=1 pour l'activer)");
+  } else {
+    for (const [type, mode] of [["atelier", "devis"], ["atelier", "rdv"], ["client", "devis"]]) {
+      let pire = 0;
+      for (const largeur of [320, 360, 390]) {
+        const ctx = await browser.newContext({ ...L, viewport: { width: largeur, height: 800 }, isMobile: true, hasTouch: true });
+        const p = await ctx.newPage();
+        await p.goto(`${base}/api/apercu-email?type=${type}&mode=${mode}`, { waitUntil: "networkidle" });
+        const diff = await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+        if (diff > pire) pire = diff;
+        await ctx.close();
+      }
+      pire > 1
+        ? fail(`E-mail ${type}/${mode} : débordement horizontal de ${pire}px sur écran étroit`)
+        : ok(`E-mail ${type}/${mode} : lisible de 320 à 390px sans défilement`);
+    }
+  }
+}
+
 await browser.close();
 
 console.log("\n================ RECETTE ================\n");
