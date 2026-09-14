@@ -111,6 +111,32 @@ champ fautif — soit exactement l'information qui lui permet de contourner le
 piège au coup suivant. Le schéma l'accepte désormais, et la route répond 200
 sans rien envoyer.
 
+### D9 — La demande est enregistrée avant d'être envoyée par e-mail
+Un e-mail n'est pas un stockage : s'il part en spam, si la clé d'API expire ou
+si le service tombe, le prospect disparaît sans que personne ne s'en aperçoive.
+La demande est donc écrite d'abord, envoyée ensuite ; et l'échec de l'écriture
+n'annule pas l'envoi. Il faut deux pannes simultanées pour perdre un client.
+
+### D10 — Netlify Blobs plutôt qu'une base de données
+Supabase était prévu. Il aurait imposé un compte de plus à créer, à payer un
+jour et à transmettre à l'atelier. Netlify Blobs est déjà inclus dans
+l'hébergement : rien à ouvrir, rien à facturer, rien à migrer le jour où le
+site change de mains. Le stockage est isolé derrière une interface de quatre
+méthodes — si le volume justifie un jour une vraie base, seul ce fichier
+change.
+
+Corollaire : une seconde implémentation, un simple fichier JSON, sert en
+développement et en recette. Sans elle l'espace ne serait testable qu'une fois
+déployé.
+
+### D11 — Un mot de passe partagé, pas de comptes
+L'atelier, c'est une personne, éventuellement deux. Un système de comptes
+ajouterait un formulaire d'inscription, une réinitialisation par e-mail, une
+table d'utilisateurs à protéger — pour un seul utilisateur réel. Un mot de
+passe en variable d'environnement et une session signée suffisent, et ne
+laissent rien à voler côté client. Le jour où il faut distinguer deux
+personnes, la question se reposera.
+
 ---
 
 ## Ce qui reste à obtenir du client
@@ -128,12 +154,17 @@ sans rien envoyer.
 
 ## Prochaines étapes techniques
 
-1. Créer le compte Resend et saisir RESEND_API_KEY chez Netlify
-2. Espace d'administration : Supabase (base + authentification), liste des
-   demandes, confirmation en un clic
-3. Page « L'atelier » (à propos), une fois les photos prises
-4. Remplacer les emplacements photo par les vraies images
-5. Compléter les champs légaux : SIRET, forme juridique, assurance, médiateur
+1. ~~Créer le compte Resend et saisir RESEND_API_KEY chez Netlify~~ — fait
+2. ~~Espace d'administration : liste des demandes, confirmation en un clic~~ —
+   fait (Netlify Blobs, pas Supabase : voir D10)
+3. Saisir `ADMIN_MOT_DE_PASSE` et `ADMIN_SECRET` chez Netlify, puis vérifier
+   qu'une vraie demande apparaît bien dans `/admin` en ligne
+4. Vue semaine des rendez-vous confirmés (promise dans l'offre 2)
+5. Renommer le site Netlify en `as-du-2-roues` et mettre à jour
+   `NEXT_PUBLIC_SITE_URL`
+6. Page « L'atelier » (à propos), une fois les photos prises
+7. Remplacer les emplacements photo par les vraies images
+8. Compléter les champs légaux : SIRET, forme juridique, assurance, médiateur
 
 ---
 
@@ -163,3 +194,18 @@ sans rien envoyer.
   (le piège à robots renseignait le robot sur le champ à éviter) et deux
   fausses (Next.js pose son propre role="alert" ; un piège hors écran reste
   « visible » au sens de Playwright)
+
+### 14 septembre 2026
+- Rendu des e-mails corrigé sur mobile : il manquait la balise `viewport`, si
+  bien que Gmail Android composait sur 980 px et décalait tout vers la droite
+- **Le test mentait** : il comparait la largeur du contenu à celle de la page,
+  toutes deux à 980 px, et voyait donc zéro débordement. Il mesure désormais
+  d'abord la largeur de l'appareil. Un test qui mesure la mauvaise chose est
+  pire que pas de test du tout.
+- Enregistrement des demandes avant envoi de l'e-mail (D9), stockage Netlify
+  Blobs avec adaptateur fichier pour la recette (D10)
+- Espace atelier livré : connexion par mot de passe partagé (D11), session
+  signée de 12 h, liste filtrable, fiche détaillée, confirmation d'un créneau
+  avec e-mail au client, changement de statut
+- Recette étendue à l'espace : six contrôles, du refus sans session jusqu'à la
+  déconnexion

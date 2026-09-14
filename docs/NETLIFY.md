@@ -102,14 +102,35 @@ permettra d'envoyer une version en validation sans toucher au site en ligne.
 
 ## Les variables d'environnement, en détail
 
-Trois variables à créer dans *Site configuration → Environment variables*.
-Les trois ne se configurent pas de la même façon, et l'erreur coûte cher.
+Les variables à créer dans *Site configuration → Environment variables*.
+Elles ne se configurent pas toutes de la même façon, et l'erreur coûte cher.
 
 | Variable | Secret ? | Portée (Scopes) | Valeur |
 |---|---|---|---|
 | `RESEND_API_KEY` | **Oui** — cocher *Contains secret values* | **Functions, et rien d'autre** | La clé Resend |
+| `ADMIN_MOT_DE_PASSE` | **Oui** | **Functions, et rien d'autre** | Le mot de passe de l'espace atelier |
+| `ADMIN_SECRET` | **Oui** | **Functions, et rien d'autre** | Une longue chaîne aléatoire, jamais vue par personne |
 | `CONTACT_TO` | Non | Functions | L'adresse qui reçoit les demandes |
+| `CONTACT_FROM` | Non | Functions | L'adresse d'expédition (`onboarding@resend.dev` tant que le domaine n'est pas vérifié) |
 | `NEXT_PUBLIC_SITE_URL` | **Non, jamais** | **Builds** | L'adresse publique du site |
+
+**Les deux variables de l'espace atelier.** `ADMIN_MOT_DE_PASSE` est ce que
+l'atelier tape pour entrer. `ADMIN_SECRET` ne se tape jamais : c'est la clé
+avec laquelle le serveur signe le cookie de session. Sans elle, n'importe qui
+pourrait fabriquer un cookie valide et entrer sans mot de passe. Elle se
+génère au hasard, se colle dans Netlify, et s'oublie :
+
+```bash
+openssl rand -base64 48
+```
+
+Changer `ADMIN_SECRET` déconnecte tout le monde immédiatement — c'est le geste
+à faire si un doute apparaît, sans avoir à changer le mot de passe de
+l'atelier.
+
+Tant que ces deux variables sont absentes, `/admin` affiche la page de
+connexion et refuse toute saisie en l'expliquant. Le site public, lui,
+fonctionne normalement.
 
 **Pourquoi `Functions` pour la clé.** Sur Netlify, Next.js est servi par une
 fonction serverless — on la voit passer dans le journal de construction sous
@@ -185,7 +206,8 @@ gratuite, c'est une règle de sécurité — elle empêche qu'un secret de
 production se retrouve appliqué partout d'un seul geste, y compris dans des
 environnements de test.
 
-Pour la clé Resend, remplir ainsi :
+Pour la clé Resend — et de la même façon pour `ADMIN_MOT_DE_PASSE` et
+`ADMIN_SECRET` — remplir ainsi :
 
 | Contexte | Valeur |
 |---|---|
@@ -200,9 +222,9 @@ valeur *« is available to the CLI, and is not considered secret »*. Y coller
 la vraie clé annule une partie de la protection qu'on vient d'activer. En
 développement local, la clé vit dans `.env.local`, qui est ignoré par Git.
 
-Les deux variables non secrètes — `CONTACT_TO` et `NEXT_PUBLIC_SITE_URL` —
-n'ont pas cette contrainte : *Same value for all deploy contexts* leur va très
-bien.
+Les variables non secrètes — `CONTACT_TO`, `CONTACT_FROM` et
+`NEXT_PUBLIC_SITE_URL` — n'ont pas cette contrainte : *Same value for all
+deploy contexts* leur va très bien.
 
 **Après chaque ajout ou modification :** *Deploys → Trigger deploy → Clear
 cache and deploy site*. Une variable n'est pas appliquée rétroactivement au
@@ -235,8 +257,9 @@ personne n'a vue » ne l'est pas.
    demande, la valide, envoie l'e-mail à l'atelier et l'accusé de réception au
    client.
 2. **Créer le compte Resend** pour l'envoi d'e-mails (offre gratuite).
-3. **Monter l'espace d'administration** : base Supabase, authentification,
-   liste des demandes, confirmation en un clic.
+3. **Monter l'espace d'administration** : liste des demandes,
+   confirmation en un clic. *(Fait — sans Supabase : le stockage passe par
+   Netlify Blobs, déjà inclus dans l'hébergement.)*
 
 Pour les étapes 2 et 3, il faudra une clé d'API. **Elle ne passera pas non plus
 par la conversation** : tu la colleras directement dans *Site configuration →
