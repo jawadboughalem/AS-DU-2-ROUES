@@ -49,10 +49,34 @@ interface Store {
 /*  Netlify Blobs — production                                                 */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Nom du magasin, isolé par contexte de déploiement.
+ *
+ * Par défaut un magasin Netlify Blobs vit au niveau du *site* : sa
+ * documentation le dit explicitement, « data can be read and written across
+ * different deploys and deploy contexts ». Autrement dit, un aperçu de branche
+ * — dont l'URL est publique et le code non relu — lirait et modifierait les
+ * vraies demandes des vrais clients. Une recette sur un aperçu écrirait dans
+ * les données de l'atelier.
+ *
+ * Chaque contexte a donc son magasin, et seule la production touche
+ * « demandes ». À l'inverse, on ne passe pas par `getDeployStore` : ce magasin
+ * est effacé avec son déploiement, ce qui est exactement ce qu'il ne faut pas
+ * pour des demandes clients.
+ *
+ * Si CONTEXT est absent, on retombe sur la production : c'est le repli qui
+ * garde le site en ligne fonctionnel, et il ne fait que reproduire le
+ * comportement par défaut de Netlify.
+ */
+function nomDuMagasin(): string {
+  const contexte = process.env.CONTEXT;
+  return !contexte || contexte === "production" ? "demandes" : `demandes-${contexte}`;
+}
+
 function storeNetlify(): Store {
   async function espace() {
     const { getStore } = await import("@netlify/blobs");
-    return getStore({ name: "demandes", consistency: "strong" });
+    return getStore({ name: nomDuMagasin(), consistency: "strong" });
   }
 
   return {

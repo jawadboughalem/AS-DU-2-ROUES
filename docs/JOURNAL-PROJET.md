@@ -137,6 +137,18 @@ passe en variable d'environnement et une session signée suffisent, et ne
 laissent rien à voler côté client. Le jour où il faut distinguer deux
 personnes, la question se reposera.
 
+### D12 — Un magasin de données par contexte de déploiement
+Un magasin Netlify Blobs vit par défaut au niveau du site : sa documentation
+précise que les données sont lisibles et modifiables « across different
+deploys and deploy contexts ». Concrètement, un aperçu de branche — URL
+publique, code non relu — écrirait dans les demandes réelles de l'atelier, et
+une recette suffirait à les altérer. Le magasin est donc nommé d'après
+`CONTEXT` : seule la production écrit dans `demandes`.
+
+`getDeployStore`, qui isole par déploiement, était le mauvais outil : ce
+magasin est effacé avec son déploiement. Des demandes clients ne peuvent pas
+disparaître au redéploiement suivant.
+
 ---
 
 ## Ce qui reste à obtenir du client
@@ -209,3 +221,5 @@ personnes, la question se reposera.
   avec e-mail au client, changement de statut
 - Recette étendue à l'espace : six contrôles, du refus sans session jusqu'à la
   déconnexion
+- Magasin isolé par contexte de déploiement (D12) : un aperçu ne peut plus
+  écrire dans les demandes de production

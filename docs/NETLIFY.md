@@ -132,6 +132,14 @@ Tant que ces deux variables sont absentes, `/admin` affiche la page de
 connexion et refuse toute saisie en l'expliquant. Le site public, lui,
 fonctionne normalement.
 
+**Les aperçus ne touchent pas aux vraies demandes.** Un magasin Netlify Blobs
+vit par défaut au niveau du site : un déploiement d'aperçu lirait et
+modifierait les demandes de production. Le code nomme donc le magasin d'après
+la variable `CONTEXT` fournie par Netlify — seule la production écrit dans
+`demandes`, un aperçu écrit dans `demandes-deploy-preview`. C'est pour cette
+raison que le mot de passe peut avoir la même valeur dans tous les contextes
+sans risque pour les données de l'atelier.
+
 **Pourquoi `Functions` pour la clé.** Sur Netlify, Next.js est servi par une
 fonction serverless — on la voit passer dans le journal de construction sous
 le nom `___netlify-server-handler`. C'est elle qui exécute la route d'envoi
