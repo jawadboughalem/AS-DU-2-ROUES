@@ -361,7 +361,7 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
   if (sonde.status === 404) {
     warn("Aperçu des e-mails désactivé (APERCU_EMAIL=1 pour l'activer)");
   } else {
-    for (const [type, mode] of [["atelier", "devis"], ["atelier", "rdv"], ["client", "devis"]]) {
+    for (const [type, mode] of [["atelier", "devis"], ["atelier", "rdv"], ["client", "devis"], ["confirmation", "rdv"]]) {
       const soucis = [];
       for (const largeur of [320, 360, 390, 412]) {
         const ctx = await browser.newContext({ ...L, viewport: { width: largeur, height: 800 }, isMobile: true, hasTouch: true });

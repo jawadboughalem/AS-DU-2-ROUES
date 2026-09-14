@@ -1,4 +1,4 @@
-import { emailAtelier, emailClient } from "@/lib/email-templates";
+import { emailAtelier, emailClient, emailConfirmation } from "@/lib/email-templates";
 import type { Demande } from "@/lib/demande";
 
 /**
@@ -43,11 +43,15 @@ export async function GET(request: Request) {
 
   const params = new URL(request.url).searchParams;
   const mode = params.get("mode") === "rdv" ? "rdv" : "devis";
-  const destinataire = params.get("type") === "client" ? "client" : "atelier";
+  const type = params.get("type");
 
   const demande: Demande = { ...EXEMPLE, mode };
   const { html } =
-    destinataire === "client" ? emailClient(demande) : emailAtelier(demande);
+    type === "client"
+      ? emailClient(demande)
+      : type === "confirmation"
+        ? emailConfirmation(demande, "Samedi 20 septembre 2026, le matin, entre 10h et 13h")
+        : emailAtelier(demande);
 
   return new Response(html, {
     headers: {

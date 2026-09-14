@@ -29,7 +29,15 @@ export default async function FicheDemande({
   await exigerSession();
 
   const { id } = await params;
-  const entrée = await demandesStore().lire(id);
+  // Une panne de stockage et une demande inexistante mènent au même écran :
+  // dans les deux cas il n'y a rien à afficher, et la liste porte déjà le
+  // diagnostic.
+  const entrée = await demandesStore()
+    .lire(id)
+    .catch((erreur) => {
+      console.error("Lecture de la demande impossible :", erreur);
+      return null;
+    });
   if (!entrée) notFound();
 
   const d = entrée.demande;
