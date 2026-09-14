@@ -34,7 +34,25 @@ function ligne(intitulé: string, valeur?: string | null) {
 
 function enveloppe(titre: string, contenu: string): string {
   return `<!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><title>${échapper(titre)}</title></head>
+<html lang="fr"><head>
+<meta charset="utf-8">
+<!--
+  Sans cette balise, les clients de messagerie mobiles — Gmail Android en
+  particulier — retombent sur une largeur de mise en page de bureau, 980 px.
+  Le contenu est alors centré dans un espace bien plus large que l'écran :
+  marge à gauche, débordement à droite, défilement horizontal obligatoire.
+  C'est la ligne la plus importante de ce gabarit.
+-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
+  Déclare que ce gabarit assume son rendu dans les deux thèmes. Sans cela,
+  le client inverse les couleurs de son propre chef, avec un résultat qui
+  n'est prévisible pour personne.
+-->
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<title>${échapper(titre)}</title>
+</head>
 <body style="margin:0;padding:16px;background:#f6f5f2;word-break:break-word;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px;margin:0 auto;table-layout:fixed">
     <tr><td style="background:${ENCRE};padding:20px 24px;border-radius:12px 12px 0 0">

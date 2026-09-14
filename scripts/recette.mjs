@@ -362,18 +362,26 @@ for (const w of [320, 360, 390, 430, 768, 1024, 1440, 1920]) {
     warn("Aperçu des e-mails désactivé (APERCU_EMAIL=1 pour l'activer)");
   } else {
     for (const [type, mode] of [["atelier", "devis"], ["atelier", "rdv"], ["client", "devis"]]) {
-      let pire = 0;
-      for (const largeur of [320, 360, 390]) {
+      const soucis = [];
+      for (const largeur of [320, 360, 390, 412]) {
         const ctx = await browser.newContext({ ...L, viewport: { width: largeur, height: 800 }, isMobile: true, hasTouch: true });
         const p = await ctx.newPage();
         await p.goto(`${base}/api/apercu-email?type=${type}&mode=${mode}`, { waitUntil: "networkidle" });
-        const diff = await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-        if (diff > pire) pire = diff;
+        const m = await p.evaluate(() => ({
+          client: document.documentElement.clientWidth,
+          scroll: document.documentElement.scrollWidth,
+        }));
+        // Comparer scrollWidth à clientWidth ne suffit pas : sans balise
+        // viewport, les deux valent 980 et le test passe au vert alors que
+        // l'utilisateur doit faire défiler. On vérifie donc d'abord que la
+        // mise en page adopte bien la largeur de l'appareil.
+        if (m.client > largeur + 1) soucis.push(`${largeur}px → mise en page à ${m.client}px (balise viewport absente ou ignorée)`);
+        else if (m.scroll > m.client + 1) soucis.push(`${largeur}px → débordement de ${m.scroll - m.client}px`);
         await ctx.close();
       }
-      pire > 1
-        ? fail(`E-mail ${type}/${mode} : débordement horizontal de ${pire}px sur écran étroit`)
-        : ok(`E-mail ${type}/${mode} : lisible de 320 à 390px sans défilement`);
+      soucis.length
+        ? fail(`E-mail ${type}/${mode} : ${soucis[0]}`)
+        : ok(`E-mail ${type}/${mode} : à la largeur de l'appareil, de 320 à 412px`);
     }
   }
 }
